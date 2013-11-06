@@ -8,7 +8,7 @@ Assigns (x,y) to each post (word length, sentence length)
 Run k-means algorithm on all blog scores to give average? (Or just average)
 """
 
-import sys
+import sys, nltk
 from HTMLParser import HTMLParser
 from bs4 import BeautifulSoup
 
@@ -50,13 +50,23 @@ def main():
     parser.feed(input_text)
     
     post_list = parser.post_list
-    one_post = normalize(post_list[0])
-    print "%r" % one_post
 
+    counter = 1
+    
 
-    counter = 0
     for post in post_list:
         post = normalize(post)
-        print "Post #%d: " %counter, post
+        # print "Post #%d: "%counter, nltk.pos_tag(nltk.word_tokenize(post))
+        tagged_text = nltk.pos_tag(nltk.word_tokenize(post))
+        function_counter = 0
+        for post in tagged_text:
+            if post[1] == "IN":
+                function_counter += 1
+
+        print "Number of function words in Post #%r: " %counter, function_counter
+        if counter == 10:
+            break
         counter += 1
+
+        
 main()
