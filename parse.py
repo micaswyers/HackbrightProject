@@ -48,25 +48,39 @@ def main():
     open_file.close()
 
     parser.feed(input_text)
-    
     post_list = parser.post_list
-
     counter = 1
-    
 
     for post in post_list:
         post = normalize(post)
-        # print "Post #%d: "%counter, nltk.pos_tag(nltk.word_tokenize(post))
-        tagged_text = nltk.pos_tag(nltk.word_tokenize(post))
-        function_counter = 0
-        for post in tagged_text:
-            if post[1] == "IN":
-                function_counter += 1
+        print "*******Post #%d: *********" % counter
+        tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+        sentences = tokenizer.tokenize(post)
+        for sentence in sentences:
+            print "This is a whole sentence: ", sentence
+            sentence_words = sentence.split(" ")
+            print "This is how many words are in the sentence: ", len(sentence_words)
 
-        print "Number of function words in Post #%r: " %counter, function_counter
         if counter == 10:
             break
         counter += 1
+"""
+    
+#looking for function words in a post
+    for post in post_list:
+        post = normalize(post)
+        tagged_text = nltk.pos_tag(nltk.word_tokenize(post))
+        function_counter = 0
+        #Looks for POS tags: articles, adpositions, conjunctions, aux. verbs, interjections, particples, "to", WH-determiners, WH-pronouns, WH-adverbs
+        function_word_list = ["DT", "IN", "CC", "MD", "UH", "RP", "TO", "WDT", "WP", "WRB"]
+        for post in tagged_text:
+            if post[1] in function_word_list:
+                function_counter += 1
+
+        print "Number of function words in Post #%r: " %counter, function_counter
+        counter += 1
+"""
+
 
         
 main()
