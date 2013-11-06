@@ -43,10 +43,11 @@ def function_words_per_post(some_text):
     some_text = normalize(some_text)
     tagged_text = nltk.pos_tag(nltk.word_tokenize(some_text))
     function_counter = 0
-    #Looks for POS tags: articles, adpositions, conjunctions, aux. verbs, interjections, particples, "to", WH-determiners, WH-pronouns, WH-adverbs
+    #Looks for Part of Speech tags: articles, adpositions, conjunctions, aux. verbs, interjections, particples, "to", WH-determiners, WH-pronouns, WH-adverbs
     function_word_list = ["DT", "IN", "CC", "MD", "UH", "RP", "TO", "WDT", "WP", "WRB"]
     for post in tagged_text:
         if post[1] in function_word_list:
+            # print post[0] <--Prints out all function words found in the post
             function_counter += 1
 
     return function_counter
@@ -71,10 +72,12 @@ def main():
     open_file.close()
 
     parser.feed(input_text)
-    post_list = parser.post_list
-    counter = 1
+    posts_list = parser.post_list
 
-    for post in post_list:
+    post_scores = []
+    
+    counter = 1
+    for post in posts_list:
         post = normalize(post)
         print "*******Post #%d: *********" % counter
         word_counts = words_per_sentence(post)
@@ -83,32 +86,14 @@ def main():
         word_count = 0
         for count in word_counts:
             word_count += count
-        word_count = word_count/len(word_counts)
-        print "Average # of words per sentence in a list: %r" % word_count
-
+        average_word_count = word_count/len(word_counts)
+        print "Average # of words per sentence in a list: %r" % average_word_count
         print "# of function words per post: %d" % function_words
-        
-        if counter == 10:
-            break
+
+        post_scores.append((average_word_count, function_words))
         counter += 1
 
-
-"""
-    
-#looking for function words in a post
-    for post in post_list:
-        post = normalize(post)
-        tagged_text = nltk.pos_tag(nltk.word_tokenize(post))
-        function_counter = 0
-        #Looks for POS tags: articles, adpositions, conjunctions, aux. verbs, interjections, particples, "to", WH-determiners, WH-pronouns, WH-adverbs
-        function_word_list = ["DT", "IN", "CC", "MD", "UH", "RP", "TO", "WDT", "WP", "WRB"]
-        for post in tagged_text:
-            if post[1] in function_word_list:
-                function_counter += 1
-
-        print "Number of function words in Post #%r: " %counter, function_counter
-        counter += 1
-"""
+    print "AVERAGE WORD COUNT & # OF FUNCTION WORDS PER POST: ", post_scores
 
 
         
