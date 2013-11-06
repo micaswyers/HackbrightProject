@@ -39,6 +39,29 @@ def normalize(input_text):
     input_text = input_text.strip()
     return input_text
 
+def function_words_per_post(some_text):
+    some_text = normalize(some_text)
+    tagged_text = nltk.pos_tag(nltk.word_tokenize(some_text))
+    function_counter = 0
+    #Looks for POS tags: articles, adpositions, conjunctions, aux. verbs, interjections, particples, "to", WH-determiners, WH-pronouns, WH-adverbs
+    function_word_list = ["DT", "IN", "CC", "MD", "UH", "RP", "TO", "WDT", "WP", "WRB"]
+    for post in tagged_text:
+        if post[1] in function_word_list:
+            function_counter += 1
+
+    return function_counter
+
+
+def words_per_sentence(one_post):
+    tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+    sentences = tokenizer.tokenize(one_post) #creates a list of sentences 
+    word_count_list = []
+    for sentence in sentences: #for each sentence in the list
+        sentence_words = sentence.split(" ") #creates a list of words in the sentence
+        word_count = len(sentence_words)
+        word_count_list.append(word_count)
+    return word_count_list
+        
 
 def main():
     script, input_text = sys.argv
@@ -54,16 +77,22 @@ def main():
     for post in post_list:
         post = normalize(post)
         print "*******Post #%d: *********" % counter
-        tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
-        sentences = tokenizer.tokenize(post)
-        for sentence in sentences:
-            print "This is a whole sentence: ", sentence
-            sentence_words = sentence.split(" ")
-            print "This is how many words are in the sentence: ", len(sentence_words)
+        word_counts = words_per_sentence(post)
+        function_words = function_words_per_post(post)
 
+        word_count = 0
+        for count in word_counts:
+            word_count += count
+        word_count = word_count/len(word_counts)
+        print "Average # of words per sentence in a list: %r" % word_count
+
+        print "# of function words per post: %d" % function_words
+        
         if counter == 10:
             break
         counter += 1
+
+
 """
     
 #looking for function words in a post
