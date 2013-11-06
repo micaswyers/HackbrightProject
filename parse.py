@@ -1,16 +1,19 @@
 """
-Takes in XML blog document
-Splits into posts 
-Adds each post to a list
+Takes in a folder of XML blog documents, one blog document at a time
+    Splits document into posts 
+    Adds each post to a list
 
-Cleans each post (removes escapes)
-Assigns (x,y) to each post (word length, sentence length)
+    Cleans each post (removes escapes)
+    Assigns (x,y) to each post (word length, sentence length)
+    Repeat
+
+
 Run k-means algorithm on all blog scores to give average? (Or just average)
 """
 
-import sys, nltk
+import sys, nltk, os
 from HTMLParser import HTMLParser
-from bs4 import BeautifulSoup
+
 
 
 class MyHTMLParser(HTMLParser):
@@ -30,11 +33,6 @@ class MyHTMLParser(HTMLParser):
 
 parser = MyHTMLParser()
 
-
-#Not actually using this right now
-def convert(input_text):
-    text = BeautifulSoup(input_text)
-
 def normalize(input_text):
     input_text = input_text.strip()
     return input_text
@@ -45,9 +43,10 @@ def function_words_per_post(some_text):
     function_counter = 0
     #Looks for Part of Speech tags: articles, adpositions, conjunctions, aux. verbs, interjections, particples, "to", WH-determiners, WH-pronouns, WH-adverbs
     function_word_list = ["DT", "IN", "CC", "MD", "UH", "RP", "TO", "WDT", "WP", "WRB"]
+    negatives_list = ["not", "nor", "nobody", "never", "nowhere", "nothing"]
     for post in tagged_text:
-        if post[1] in function_word_list:
-            # print post[0] <--Prints out all function words found in the post
+        if post[1] in function_word_list or post[0] in negatives_list:
+            print post[0] #<--Prints out all function words found in the post
             function_counter += 1
 
     return function_counter
@@ -65,35 +64,47 @@ def words_per_sentence(one_post):
         
 
 def main():
-    script, input_text = sys.argv
+    # script, input_text = sys.argv
+    script, input_folder = sys.argv
 
-    open_file = open(input_text, 'rb')
-    input_text = open_file.read()
-    open_file.close()
-
-    parser.feed(input_text)
-    posts_list = parser.post_list
-
-    post_scores = []
-    
     counter = 1
-    for post in posts_list:
-        post = normalize(post)
-        print "*******Post #%d: *********" % counter
-        word_counts = words_per_sentence(post)
-        function_words = function_words_per_post(post)
+    for root, dirs, files in os.walk(input_folder): 
+        for one_file in files:
+            f = open("blogs/%s"%one_file, 'rb')
+            input_text = f.read()
+            f.close()
+            
 
-        word_count = 0
-        for count in word_counts:
-            word_count += count
-        average_word_count = word_count/len(word_counts)
-        print "Average # of words per sentence in a list: %r" % average_word_count
-        print "# of function words per post: %d" % function_words
 
-        post_scores.append((average_word_count, function_words))
-        counter += 1
 
-    print "AVERAGE WORD COUNT & # OF FUNCTION WORDS PER POST: ", post_scores
+
+    # open_file = open(input_text, 'rb')
+    # input_text = open_file.read()
+    # open_file.close()
+
+    # parser.feed(input_text)
+    # posts_list = parser.post_list
+
+    # post_scores = []
+    
+    # counter = 1
+    # for post in posts_list:
+    #     post = normalize(post)
+    #     print "*******Post #%d: *********" % counter
+    #     word_counts = words_per_sentence(post)
+    #     function_words = function_words_per_post(post)
+
+    #     word_count = 0
+    #     for count in word_counts:
+    #         word_count += count
+    #     average_word_count = word_count/len(word_counts)
+    #     # print "Average # of words per sentence in a list: %r" % average_word_count
+    #     # print "# of function words per post: %d" % function_words
+
+    #     post_scores.append((average_word_count, function_words))
+    #     counter += 1
+
+    # print "AVERAGE WORD COUNT & # OF FUNCTION WORDS PER POST: ", post_scores
 
 
         
