@@ -1,111 +1,74 @@
 """
-Takes in a folder of XML blog documents, one blog document at a time
-    Splits document into posts 
-    Adds each post to a list
+Take in a blog
+Split blog into posts (=samples)
 
-    Cleans each post (removes escapes)
-    Assigns (x,y) to each post (word length, sentence length)
-    Repeat
+For each posts
+Create a list of feature scores based on: 1)I 2) ! 3) # of words per post
 
-
-Run k-means algorithm on all blog scores to give average? (Or just average)
+Assemble list of feature scores for each sample (posts for all blogs)
+Run K-means clustering
+Recommend based on k-means clustering results
 """
 
-import sys, nltk, os
-from HTMLParser import HTMLParser
+import sys
+# from HTMLParser import HTMLParser
+from bs4 import BeautifulSoup
 
-
-
-class MyHTMLParser(HTMLParser):
-    def __init__(self):
-        HTMLParser.__init__(self)
-        self.post = False
-        self.post_list = []
-    def handle_starttag(self, tag, attrs):
-        if tag == "post":
-            self.post = True
-    def handle_endtag(self, tag):
-        self.post = False
-    def handle_data(self, data):
-        if self.post == True:
-            self.post_list.append(data)
-
-
-parser = MyHTMLParser()
 
 def normalize(input_text):
-    input_text = input_text.strip()
-    return input_text
+    #strips out leading and trailing white space
+    return input_text.strip()
 
-def function_words_per_post(some_text):
-    some_text = normalize(some_text)
-    tagged_text = nltk.pos_tag(nltk.word_tokenize(some_text))
-    function_counter = 0
-    #Looks for Part of Speech tags: articles, adpositions, conjunctions, aux. verbs, interjections, particples, "to", WH-determiners, WH-pronouns, WH-adverbs
-    function_word_list = ["DT", "IN", "CC", "MD", "UH", "RP", "TO", "WDT", "WP", "WRB"]
-    negatives_list = ["not", "nor", "nobody", "never", "nowhere", "nothing"]
-    for post in tagged_text:
-        if post[1] in function_word_list or post[0] in negatives_list:
-            print post[0] #<--Prints out all function words found in the post
-            function_counter += 1
+def open_file(input_blog):
+    f = open(input_blog, 'rb')
+    input_blog = f.read()
+    f.close()
+    return input_blog
 
-    return function_counter
+def separate_posts(input_blog):
+    post_list = []
+    blog = BeautifulSoup(open_file(input_blog))
+    sections = blog.find_all('post')
+
+    for section in sections:
+        post = normalize(section.contents[0])
+        post_list.append(post)
+    return post_list
 
 
-def words_per_sentence(one_post):
-    tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
-    sentences = tokenizer.tokenize(one_post) #creates a list of sentences 
-    word_count_list = []
-    for sentence in sentences: #for each sentence in the list
-        sentence_words = sentence.split(" ") #creates a list of words in the sentence
-        word_count = len(sentence_words)
-        word_count_list.append(word_count)
-    return word_count_list
-        
+def count_i(sample):
+    i_counter = 0
+    list_of_words = sample.split()
+    list_of_i_forms = ["I","I'M", "I'LL", "I'VE", "I'D"]
+    for word in list_of_words:
+        if word.upper() in list_of_i_forms:
+            i_counter += 1
+    return i_counter
+
+def count_exclamation(sample):
+    ep_counter = 0
+    for letter in sample: 
+        if letter == "!":
+            ep_counter += 1
+    return ep_counter
+
+def count_words(sample):
+    return len(sample.split())
+
 
 def main():
-    # script, input_text = sys.argv
-    script, input_folder = sys.argv
+    script, input_blog = sys.argv
 
-    counter = 1
-    for root, dirs, files in os.walk(input_folder): 
-        for one_file in files:
-            f = open("blogs/%s"%one_file, 'rb')
-            input_text = f.read()
-            f.close()
-            
+    posts = separate_posts(input_blog)
 
+    for post in posts:
+        I_count = count_i(post)
+        EP_count = count_exclamation(post)
+        word_count = count_words(post)
+        print "Post #%d has %d instances of 'I', %d !'s, & %d words." % (posts.index(post), I_count, EP_count, word_count)
+        print post, "\n"
+              
 
-
-
-    # open_file = open(input_text, 'rb')
-    # input_text = open_file.read()
-    # open_file.close()
-
-    # parser.feed(input_text)
-    # posts_list = parser.post_list
-
-    # post_scores = []
-    
-    # counter = 1
-    # for post in posts_list:
-    #     post = normalize(post)
-    #     print "*******Post #%d: *********" % counter
-    #     word_counts = words_per_sentence(post)
-    #     function_words = function_words_per_post(post)
-
-    #     word_count = 0
-    #     for count in word_counts:
-    #         word_count += count
-    #     average_word_count = word_count/len(word_counts)
-    #     # print "Average # of words per sentence in a list: %r" % average_word_count
-    #     # print "# of function words per post: %d" % function_words
-
-    #     post_scores.append((average_word_count, function_words))
-    #     counter += 1
-
-    # print "AVERAGE WORD COUNT & # OF FUNCTION WORDS PER POST: ", post_scores
+main() 
 
 
-        
-main()
