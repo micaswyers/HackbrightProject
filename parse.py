@@ -2,7 +2,7 @@
 Take in a blog
 Split blog into posts (=samples)
 
-For each posts
+For each post
 Create a list of feature scores based on: 1)I 2) ! 3) # of words per post
 
 Assemble list of feature scores for each sample (posts for all blogs)
@@ -11,13 +11,28 @@ Recommend based on k-means clustering results
 """
 
 import sys
-# from HTMLParser import HTMLParser
 from bs4 import BeautifulSoup
 
+def count_i(words):
+    first_personal_singular_pronouns = ["I", "I'm", "I've", "I'll", "I'd", "Me", "i", "i'm", "i've", "i'll", "i'd", "me"]
+    total = 0
+    for pronoun in first_personal_singular_pronouns:
+        total += words.get(pronoun, 0)
+    return total
 
-def normalize(input_text):
-    #strips out leading and trailing white space
-    return input_text.strip()
+def make_wordcount_dict(sample):
+    words = {}
+    # words["!"] = 0
+    tokens = sample.split()
+    ep_count = 0
+    for token in tokens:
+        words[token] = words.get(token, 0) + 1
+        # if "!" in token:
+        #     words["!"] = words.get("!") + 1
+        for character in token:
+            if character == "!":
+                ep_count += 1
+    return words, ep_count
 
 def open_file(input_blog):
     f = open(input_blog, 'rb')
@@ -26,48 +41,38 @@ def open_file(input_blog):
     return input_blog
 
 def separate_posts(input_blog):
+    #separates into posts & returns posts in a list
     post_list = []
     blog = BeautifulSoup(open_file(input_blog))
     sections = blog.find_all('post')
 
     for section in sections:
-        post = normalize(section.contents[0])
+        post = section.contents[0].strip()
         post_list.append(post)
     return post_list
 
 
-def count_i(sample):
-    i_counter = 0
-    list_of_words = sample.split()
-    list_of_i_forms = ["I","I'M", "I'LL", "I'VE", "I'D"]
-    for word in list_of_words:
-        if word.upper() in list_of_i_forms:
-            i_counter += 1
-    return i_counter
-
-def count_exclamation(sample):
-    ep_counter = 0
-    for letter in sample: 
-        if letter == "!":
-            ep_counter += 1
-    return ep_counter
-
-def count_words(sample):
-    return len(sample.split())
-
-
 def main():
     script, input_blog = sys.argv
-
     posts = separate_posts(input_blog)
 
+    feature_scores = []
     for post in posts:
-        I_count = count_i(post)
-        EP_count = count_exclamation(post)
-        word_count = count_words(post)
-        print "Post #%d has %d instances of 'I', %d !'s, & %d words." % (posts.index(post), I_count, EP_count, word_count)
-        print post, "\n"
-              
+        words, ep_count = make_wordcount_dict(post)
+
+        I_count = count_i(words)
+
+        total_words = 0
+        for word in words:
+            total_words += words[word]
+        scores = (total_words, I_count, ep_count)
+        # print "Post #%d has: %d words, %d I's, & %d exclamation points" % (posts.index(post), scores[0], scores[1], scores[2])
+        feature_scores.append(scores)
+
+    print feature_scores
+
+
+      
 
 main() 
 
