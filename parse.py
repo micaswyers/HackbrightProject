@@ -3,7 +3,7 @@ Take in a blog
 Split blog into posts (=samples)
 
 For each post
-Create a list of feature scores based on: 1)I 2) ! 3) # of words per post
+Create a list of feature scores based on: 1)words/post 2)first person singular pronouns/post 3)exclamation points/post
 
 Assemble list of feature scores for each sample (posts for all blogs)
 Run K-means clustering
@@ -14,21 +14,18 @@ import sys
 from bs4 import BeautifulSoup
 
 def count_i(words):
-    first_personal_singular_pronouns = ["I", "I'm", "I've", "I'll", "I'd", "Me", "i", "i'm", "i've", "i'll", "i'd", "me"]
+    first_person_singular_pronouns = ["I", "I'm", "I've", "I'll", "I'd", "Me", "i", "i'm", "i've", "i'll", "i'd", "me"]
     total = 0
-    for pronoun in first_personal_singular_pronouns:
+    for pronoun in first_person_singular_pronouns:
         total += words.get(pronoun, 0)
     return total
 
 def make_wordcount_dict(sample):
     words = {}
-    # words["!"] = 0
     tokens = sample.split()
     ep_count = 0
     for token in tokens:
         words[token] = words.get(token, 0) + 1
-        # if "!" in token:
-        #     words["!"] = words.get("!") + 1
         for character in token:
             if character == "!":
                 ep_count += 1
@@ -69,7 +66,7 @@ def main():
         # print "Post #%d has: %d words, %d I's, & %d exclamation points" % (posts.index(post), scores[0], scores[1], scores[2])
         feature_scores.append(scores)
 
-    print feature_scores
+    #feature_scores is a list of tuples for the word-, I-, and !- counts for each post in the blog.
 
 
       
