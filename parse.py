@@ -2,8 +2,8 @@
 Take in a blog
 Split blog into posts (=samples)
 
-For each post
-Create a list of feature scores based on: 1)words/post 2)first person singular pronouns/post 3)exclamation points/post
+For each post/sample
+Create a list of feature scores based on: 1)words 2)first person singular pronouns 3)exclamation points
 
 Assemble list of feature scores for each sample (posts for all blogs)
 Run K-means clustering
@@ -50,24 +50,22 @@ def separate_posts(input_blog):
 
 
 def main():
-    script, input_blog = sys.argv
-    posts = separate_posts(input_blog)
+    #script, input_blog = sys.argv
 
-    feature_scores = []
-    for post in posts:
-        words, ep_count = make_wordcount_dict(post)
+    for input_blog in sys.argv[1:]:
+        posts = separate_posts(input_blog)
 
-        I_count = count_i(words)
+        for post in posts:
+            words, ep_count = make_wordcount_dict(post)
 
-        total_words = 0
-        for word in words:
-            total_words += words[word]
-        scores = (total_words, I_count, ep_count)
-        # print "Post #%d has: %d words, %d I's, & %d exclamation points" % (posts.index(post), scores[0], scores[1], scores[2])
-        feature_scores.append(scores)
+            I_count = count_i(words)
 
-    #feature_scores is a list of tuples for the word-, I-, and !- counts for each post in the blog.
+            total_words = 0
 
+            for word in words:
+                total_words += words[word]
+            scores = {"wordcount": total_words, "I_count": I_count, "ep_count": ep_count} 
+            print repr(scores)
 
       
 
