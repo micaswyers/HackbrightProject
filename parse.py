@@ -23,13 +23,13 @@ def count_i(words):
 def make_wordcount_dict(sample):
     words = {}
     tokens = sample.split()
-    ep_count = 0
+    exclamation_count = 0
     for token in tokens:
         words[token] = words.get(token, 0) + 1
         for character in token:
             if character == "!":
-                ep_count += 1
-    return words, ep_count
+                exclamation_count += 1
+    return words, exclamation_count
 
 def open_file(input_blog):
     f = open(input_blog, 'rb')
@@ -56,7 +56,7 @@ def main():
         posts = separate_posts(input_blog)
 
         for post in posts:
-            words, ep_count = make_wordcount_dict(post)
+            words, exclamation_count = make_wordcount_dict(post)
 
             I_count = count_i(words)
 
@@ -64,11 +64,20 @@ def main():
 
             for word in words:
                 total_words += words[word]
-            scores = {"wordcount": total_words, "I_count": I_count, "ep_count": ep_count} 
+            #may be more efficient to shorten key names, but clearer now
+            scores = {"word_count": total_words, "I_count": I_count, "exclamation_count": exclamation_count}
             print repr(scores)
 
       
 
-main() 
 
+for pathname in sys.argv[1:]:
+    try:
+        sys.stderr.write("Parse now trying %s" % pathname)
+        main()
+    except Exception, e:
+        sys.stderr.write(pathname)
+        sys.stderr.write(": ")
+        sys.stderr.write(str(e))
+        sys.stderr.write("\n")
 
