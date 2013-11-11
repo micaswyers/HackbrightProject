@@ -70,7 +70,6 @@ def main():
 
       
 
-
 for pathname in sys.argv[1:]:
     try:
         sys.stderr.write("Parse now trying %s" % pathname)
