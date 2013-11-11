@@ -65,14 +65,17 @@ def main():
             for word in words:
                 total_words += words[word]
             #may be more efficient to shorten key names, but clearer now
-            scores = {"word_count": total_words, "I_count": I_count, "exclamation_count": exclamation_count}
+            # scores = {"word_count": total_words, "I_count": I_count, "exclamation_count": exclamation_count}
+            # print repr(scores)
+
+            scores = [total_words, I_count, exclamation_count]
             print repr(scores)
 
       
 
 for pathname in sys.argv[1:]:
     try:
-        sys.stderr.write("Parse now trying %s" % pathname)
+        sys.stderr.write("Now trying %s\n" % pathname)
         main()
     except Exception, e:
         sys.stderr.write(pathname)
