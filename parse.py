@@ -20,6 +20,11 @@ def count_i(words):
         total += words.get(pronoun, 0)
     return total
 
+def find_average_sentence_length(sample):
+    sentences = sample.split('.')
+    average_sentence_length = sum(len(x.split()) for x in sentences)/len(sentences)
+    return average_sentence_length
+
 def make_wordcount_dict(sample):
     words = {}
     tokens = sample.split()
@@ -40,8 +45,8 @@ def open_file(input_blog):
 def separate_posts(input_blog):
     #separates into posts & returns posts in a list
     post_list = []
-    blog = BeautifulSoup(open_file(input_blog))
-    sections = blog.find_all('post')
+    soup = BeautifulSoup(open_file(input_blog))
+    sections = soup.find_all('post')
 
     for section in sections:
         post = section.contents[0].strip()
@@ -50,8 +55,6 @@ def separate_posts(input_blog):
 
 
 def main():
-    #script, input_blog = sys.argv
-
     for input_blog in sys.argv[1:]:
         posts = separate_posts(input_blog)
 
@@ -62,20 +65,19 @@ def main():
 
             total_words = 0
 
+            average_sentence_length = find_average_sentence_length(post)
+
             for word in words:
                 total_words += words[word]
-            #may be more efficient to shorten key names, but clearer now
-            # scores = {"word_count": total_words, "I_count": I_count, "exclamation_count": exclamation_count}
-            # print repr(scores)
-
-            scores = [total_words, I_count, exclamation_count]
+            scores = [total_words, I_count, exclamation_count] 
+            scores = [x+0.000001 for x in scores] #gross solution to prevent divide-by-0 errors
             print repr(scores)
 
       
 
 for pathname in sys.argv[1:]:
     try:
-        sys.stderr.write("Now trying %s\n" % pathname)
+        # sys.stderr.write("Now trying %s\n" % pathname)
         main()
     except Exception, e:
         sys.stderr.write(pathname)
