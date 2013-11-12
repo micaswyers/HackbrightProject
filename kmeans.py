@@ -16,16 +16,18 @@ def get_vectors(input = sys.stdin):
 
 def main(input): 
     whitened = whiten(obs=get_vectors(input))
-    code_book = kmeans(whitened, 3) #returns tuple (codebook, distortion)
-    clustered_results = vq(whitened, code_book[0])
-    print clustered_results
 
-# # This code prints out the clustering results to the CL
-#     cluster_list = map(None, clustered_results[0])
-#     counter = 1
-#     for centroid in cluster_list:
-#         print "Post #%d belongs in Cluster #%d" % (counter, centroid)
-#         counter += 1
+    # if using kmeans :
+    results = kmeans(whitened,3)
+    clustered_results = vq(whitened, results[0])
+    print "KMEANS: ", clustered_results
+    #turns array into a list:
+    # list = map(None, clustered_results[0]) 
+    # print list
+
+    #  # if using kmeans2 :
+    # results2 = kmeans2(whitened, 3) 
+    # print "KMEANS2: ", results2[1] 
 
 if len(sys.argv) > 1:
     for pathname in sys.argv[1:]:

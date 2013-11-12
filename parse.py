@@ -69,7 +69,7 @@ def main():
 
             for word in words:
                 total_words += words[word]
-            scores = [total_words, I_count, exclamation_count] 
+            scores = [total_words, I_count, exclamation_count, average_sentence_length] 
             scores = [x+0.000001 for x in scores] #gross solution to prevent divide-by-0 errors
             print repr(scores)
 
