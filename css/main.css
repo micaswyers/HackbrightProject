@@ -1,0 +1,30 @@
+#home{
+    color: #191970;
+    font-family: 'Helvetica', sans-serif;
+    font-size: 18px;
+}
+
+.container {
+    border: 1px solid #000;
+    margin: 10px;
+}
+
+#main {
+    width: 960px;
+    margin: 0 auto 200px; /* Um what does this do? */
+}
+
+p {
+    text-align: center;
+}
+
+#heading{
+    font-family: 'Lobster 1.4', cursive;
+    font-size: 75px;
+    color: #191970;
+    
+}
+
+#sample_input{
+    text-align: center;
+}
