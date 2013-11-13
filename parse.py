@@ -1,13 +1,12 @@
 """
 Take in a blog
-Split blog into posts (=samples)
+Split blog into posts (1 post=1 sample)
 
-For each post/sample
-Create a list of feature scores based on: 1)words 2)first person singular pronouns 3)exclamation points
+For each sample
+Create a list of feature scores
 
-Assemble list of feature scores for each sample (posts for all blogs)
-Run K-means clustering
-Recommend based on k-means clustering results
+Assemble feature vector for each sample
+Output feature vectors
 """
 
 import sys
@@ -54,34 +53,32 @@ def separate_posts(input_blog):
     return post_list
 
 
-def main():
-    for input_blog in sys.argv[1:]:
-        posts = separate_posts(input_blog)
+def process(filename):
+    # for input_blog in sys.argv[1:]:
+    posts = separate_posts(filename)
+    for post in posts:
+        words, exclamation_count = make_wordcount_dict(post)
 
-        for post in posts:
-            words, exclamation_count = make_wordcount_dict(post)
+        I_count = count_i(words)
 
-            I_count = count_i(words)
+        total_words = 0
 
-            total_words = 0
+        average_sentence_length = find_average_sentence_length(post)
 
-            average_sentence_length = find_average_sentence_length(post)
+        for word in words:
+            total_words += words[word]
+        scores = [total_words, I_count, exclamation_count, average_sentence_length] 
+        # scores = [x+0.000001 for x in scores] #gross solution to prevent divide-by-0 errors
+        print repr(scores)
 
-            for word in words:
-                total_words += words[word]
-            scores = [total_words, I_count, exclamation_count, average_sentence_length] 
-            scores = [x+0.000001 for x in scores] #gross solution to prevent divide-by-0 errors
-            print repr(scores)
 
-      
-
-for pathname in sys.argv[1:]:
-    try:
-        # sys.stderr.write("Now trying %s\n" % pathname)
-        main()
-    except Exception, e:
-        sys.stderr.write(pathname)
-        sys.stderr.write(": ")
-        sys.stderr.write(str(e))
-        sys.stderr.write("\n")
-
+if __name__ == "__main__":
+    for pathname in sys.argv[1:]:
+        try:
+            # sys.stderr.write("Now trying %s\n" % pathname)
+            process(pathname)
+        except Exception, e:
+            sys.stderr.write(pathname)
+            sys.stderr.write(": ")
+            sys.stderr.write(str(e))
+            sys.stderr.write("\n")

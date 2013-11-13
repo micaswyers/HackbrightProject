@@ -1,7 +1,8 @@
 """
-takes in an array(list?) of features for each blog post
-normalizes(whitens) features to account for disparate lengths
+takes in an array of feature vectors
+normalizes(whitens) feature vectors to account for disparate lengths
 clusters into k groups 
+returns centroids of k-groups & groupings
 """
 
 import sys
@@ -18,9 +19,10 @@ def main(input):
     whitened = whiten(obs=get_vectors(input))
 
     # if using kmeans :
-    results = kmeans(whitened,3)
+    results = kmeans(whitened,12)
+    print "Centroids: ", results[0]
     clustered_results = vq(whitened, results[0])
-    print "KMEANS: ", clustered_results
+    print "Groupings: ", clustered_results[0]
     #turns array into a list:
     # list = map(None, clustered_results[0]) 
     # print list
