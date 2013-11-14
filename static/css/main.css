@@ -1,0 +1,42 @@
+#home{
+    color: #000;
+    font-family: 'Lobster 1.4', sans-serif;
+    font-size: 18px;
+    background-color: #E8E8E8;
+}
+
+.container {
+    border: 1px solid #000;
+    margin: 10px;
+}
+
+#main {
+    width: 960px;
+    margin: 0 auto 200px; 
+}
+#top_border{
+    width: 100%;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    background: transparent url(../images/top_border.png) repeat-x 0 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#heading{
+    font-family: 'Lobster 1.4', cursive;
+    font-size: 75px;
+    color: red; 
+}
+
+#sample_input{
+    text-align: center;
+    width: 400px;
+    margin: 0 auto 200px;
+}
+
+p {
+    text-align: center;
+}

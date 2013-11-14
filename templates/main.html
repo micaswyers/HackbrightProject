@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <link rel="stylesheet" type="text/css" href="static/css/main.css">
         <title>HB Project [Title TBD]</title>
     </head>
 
@@ -15,11 +15,22 @@
                 <p>
                     [This app] returns blog posts that are similar to a block of input text.
                 </p>
-                <form>
-                    <textarea name="sample_input" cols="50" rows="15">Copy/Paste the sample blog text here...</textarea><br>
-                    <input type="submit" value="Submit">
-                </form> 
+                    <textarea name="sample_input" id="text_area_sample" cols="50" rows="15">Copy/Paste the sample blog text here...</textarea><br>
+                    <button id="submit" value="Submit">SUBMIT</button>
             </div>
         </div>
+        <!-- Insert the scripts!  -->
+        <script src="../static/jquery-2.0.3.js"></script>
+        <script>
+            $("#submit").click(function (e) {
+                console.log("Clicked submit");
+                e.preventDefault(); //Prevents what the submit does
+                var input = $("#text_area_sample").val();
+                $.get("/butts", {'words': input}, function (response) {
+                    $("#sample_input").html(" ");
+                    $("#sample_input").append(response);
+                })
+            })
+        </script>
     </body>
 </html>
