@@ -6,16 +6,18 @@
     </head>
 
     <body id="home">
+        <div class="container" id="top_border"></div>
         <div class="container" id="main">
             <div class="container" id="heading">
-                <p>Mica's Hackbright Project</p>
+                <p>Blog Recommender</p>
             </div>
             <div class="container" id="sample_input">
-                <p>I aim for a judicious use of white space.</p>
+                <p>
+                    [This app] returns blog posts that are similar to a block of input text.
+                </p>
                 <form>
-                    <label for="GET-sample">Copy/Paste Sample Text:</label>
-                    <input id="GET-sample" type="text" name="sample">
-                    <input type="submit" value="Save">
+                    <textarea name="sample_input" cols="50" rows="15">Copy/Paste the sample blog text here...</textarea><br>
+                    <input type="submit" value="Submit">
                 </form> 
             </div>
         </div>
