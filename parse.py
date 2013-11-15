@@ -30,7 +30,7 @@ def find_average_sentence_length(sample):
         sentence = sample[beginning:match.start()]
         # punctuation = sample[match.start():match.end()]
         sentences.append(sentence)
-        beginning = match.end() + 1
+        beginning = match.end()
     total_words = 0
     for sentence in sentences:
         total_words += len([word for word in WORD_SPLITTER(sentence)])
