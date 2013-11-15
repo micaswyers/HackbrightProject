@@ -9,10 +9,12 @@ Assemble feature vector for each sample
 Output feature vectors
 """
 
-import sys
+import sys, re
 from bs4 import BeautifulSoup
+SENTENCE_SPLITTER = re.compile(r"((\.|\?|!)+)").finditer
+WORD_SPLITTER = re.compile(r"(\b)+").finditer
 
-def count_i(words):
+def count_i(words):  #use Postgres full-text search 
     first_person_singular_pronouns = ["I", "I'm", "I've", "I'll", "I'd", "Me", "i", "i'm", "i've", "i'll", "i'd", "me"]
     total = 0
     for pronoun in first_person_singular_pronouns:
@@ -20,8 +22,18 @@ def count_i(words):
     return total
 
 def find_average_sentence_length(sample):
-    sentences = sample.split('.')
-    average_sentence_length = sum(len(x.split()) for x in sentences)/len(sentences)
+    #regular expressions for lexical analysis
+    beginning = 0
+    sentences = []
+    for match in SENTENCE_SPLITTER(sample):
+        sentence = sample[beginning:match.start()]
+        # punctuation = sample[match.start():match.end()]
+        sentences.append(sentence)
+        beginning = match.end()
+    total_words = 0
+    for sentence in sentences:
+        total_words += len([word for word in WORD_SPLITTER(sentence)])
+    average_sentence_length = total_words/len(sentences)
     return average_sentence_length
 
 def make_wordcount_dict(sample):
@@ -54,7 +66,6 @@ def separate_posts(input_blog):
 
 
 def process(filename):
-    # for input_blog in sys.argv[1:]:
     posts = separate_posts(filename)
     for post in posts:
         words, exclamation_count = make_wordcount_dict(post)
@@ -68,7 +79,7 @@ def process(filename):
         for word in words:
             total_words += words[word]
         scores = [total_words, I_count, exclamation_count, average_sentence_length] 
-        # scores = [x+0.000001 for x in scores] #gross solution to prevent divide-by-0 errors
+        scores = [x+0.000001 for x in scores] #gross solution to prevent divide-by-0 errors
         print repr(scores)
 
 
