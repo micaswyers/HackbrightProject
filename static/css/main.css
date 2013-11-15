@@ -4,10 +4,21 @@
     margin: 10px;
 }
 /* IDs */
+#heading{
+    font-family: 'Lobster 1.4', cursive;
+    font-size: 75px;
+    color: red; 
+}
 
 #main {
     width: 960px;
     margin: 0 auto 200px; 
+}
+
+#sample_input{
+    text-align: center;
+    width: 400px;
+    margin: 0 auto 200px;
 }
 
 #top_border{
@@ -21,17 +32,7 @@
     left: 0;
 }
 
-#heading{
-    font-family: 'Lobster 1.4', cursive;
-    font-size: 75px;
-    color: red; 
-}
-
-#sample_input{
-    text-align: center;
-    width: 400px;
-    margin: 0 auto 200px;
-}
+/* Tags */
 
 body{
     color: #000;
