@@ -11,8 +11,8 @@ Output feature vectors
 
 import sys, re
 from bs4 import BeautifulSoup
-SENTENCE_SPLITTER = re.compile(r"((\.|\?|!)+)").finditer
-WORD_SPLITTER = re.compile(r"(\b)+").finditer
+SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer
+WORD_SPLITTER = re.compile(r"(\w+)").finditer
 
 def count_i(words):  #use Postgres full-text search 
     first_person_singular_pronouns = ["I", "I'm", "I've", "I'll", "I'd", "Me", "i", "i'm", "i've", "i'll", "i'd", "me"]
@@ -23,17 +23,21 @@ def count_i(words):  #use Postgres full-text search
 
 def find_average_sentence_length(sample):
     #regular expressions for lexical analysis
+    #maybe make more efficient with one pass through the string
     beginning = 0
     sentences = []
     for match in SENTENCE_SPLITTER(sample):
         sentence = sample[beginning:match.start()]
         # punctuation = sample[match.start():match.end()]
         sentences.append(sentence)
-        beginning = match.end()
+        beginning = match.end() + 1
     total_words = 0
     for sentence in sentences:
         total_words += len([word for word in WORD_SPLITTER(sentence)])
-    average_sentence_length = total_words/len(sentences)
+    if len(sentences) == 0:
+        average_sentence_length = len(sample.split())
+    else:
+        average_sentence_length = total_words/len(sentences)
     return average_sentence_length
 
 def make_wordcount_dict(sample):
@@ -79,7 +83,7 @@ def process(filename):
         for word in words:
             total_words += words[word]
         scores = [total_words, I_count, exclamation_count, average_sentence_length] 
-        scores = [x+0.000001 for x in scores] #gross solution to prevent divide-by-0 errors
+        # scores = [x+0.000001 for x in scores] #gross solution to prevent divide-by-0 errors
         print repr(scores)
 
 
