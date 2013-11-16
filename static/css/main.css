@@ -3,22 +3,32 @@
     /*border: 1px solid #000;*/
     margin: 10px;
 }
+.box {
+    float: left;
+}
 /* IDs */
+.main {
+    width: 960px;
+    margin: 0 auto 200px; 
+    overflow: auto;
+}
+
 #heading{
     font-family: 'Lobster 1.4', cursive;
     font-size: 75px;
     color: red; 
-}
-
-#main {
-    width: 960px;
-    margin: 0 auto 200px; 
+    clear: both;
 }
 
 #sample_input{
     text-align: center;
     width: 400px;
-    margin: 0 auto 200px;
+}
+
+#search_results{
+    text-align: center;
+    padding: 10px;
+    width: 400px;
 }
 
 #top_border{

@@ -1,17 +1,26 @@
  
  $(document).ready(function() {
-                console.log('ready!');
-            });
+    console.log('ready!');
+    $("#search_results").hide();
+    });
 
- $("#submit").click(function (e) {
+ $("#submit").click(function (e) { //what does the e do again?
     console.log("User clicked submit button.");
     e.preventDefault(); //Overrides submit button defaults
-    var input = $("#text_area_sample").val();
-    $.get("/butts", {'words': input}, function (response) {
-        $("#description").html("Based on your input you should read: ");
-        $("#text_area_sample").hide(" ");
-        $("#submit").hide(" ");
-        var obj = $.parseJSON(response);
-        $("#sample_input").append("\"" + obj[0].post + "\"");
+    $("#search_results").show();
+    var input=$("#text_area_sample").val();
+
+    // $.get("/butts", {'words': input}, function (response) {
+    //     var returned_dictionary = $.parseJSON(response);
+    //     $("#search_results").html("\"" + returned_dictionary[0].title + ": \n" +returned_dictionary[0].post + "\"");
+    // });
+
+    $.ajax({
+        url:"/butts",
+        context: input
+    }).done(function(response) {
+        console.log("The response came back!");
+        var returned_dictionary = $.parseJSON(response);
+        $("#search_results").html("\"" + returned_dictionary[0].title + ": \n" +returned_dictionary[0].post + "\"");
     });
 });
