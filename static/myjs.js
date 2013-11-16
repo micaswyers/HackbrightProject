@@ -17,10 +17,10 @@
 
     $.ajax({
         url:"/butts",
-        context: input
+        data: input
     }).done(function(response) {
-        console.log("The response came back!");
+        console.log("The response came back");
         var returned_dictionary = $.parseJSON(response);
-        $("#search_results").html("\"" + returned_dictionary[0].title + ": \n" +returned_dictionary[0].post + "\"");
+        $("#search_results").html( returned_dictionary[0].title + ": \n" + "\"" +returned_dictionary[0].post + "\"");
     });
 });
