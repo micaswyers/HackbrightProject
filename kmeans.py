@@ -9,23 +9,30 @@ import sys
 from numpy import array
 from scipy.cluster.vq import whiten, vq, kmeans, kmeans2
 
-def get_vectors(input = sys.stdin):
+# def get_vectors(input = sys.stdin):
+#     vectors = []
+#     for line in input:
+#         vectors.append(array(input))
+
+#     return vectors
+
+def evaluate_input(input):
     vectors = []
+    filenames = []
     for line in input:
-        vectors.append(array(eval(line)))
-    return vectors
+        line = eval(line)
+        vectors.append(line[0])
+        filenames.append(line[1])
+    return vectors, filenames
 
 def main(input): 
-    whitened = whiten(obs=get_vectors(input))
-
+    vectors, filenames = evaluate_input(input)
+    whitened = whiten(obs=vectors)
     # if using kmeans :
     results = kmeans(whitened,12)
     print "Centroids: ", results[0]
     clustered_results = vq(whitened, results[0])
-    print "Groupings: ", clustered_results[0]
-    #turns array into a list:
-    # list = map(None, clustered_results[0]) 
-    # print list
+    print "Groupings: ", zip(clustered_results[0], filenames)
 
     #  # if using kmeans2 :
     # results2 = kmeans2(whitened, 3) 

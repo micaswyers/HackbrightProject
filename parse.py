@@ -68,8 +68,7 @@ def separate_posts(input_blog):
         post_list.append(post)
     return post_list
 
-
-def process(filename):
+def process_one_blog(filename):
     posts = separate_posts(filename)
     for post in posts:
         words, exclamation_count = make_wordcount_dict(post)
@@ -83,15 +82,17 @@ def process(filename):
         for word in words:
             total_words += words[word]
         scores = [total_words, I_count, exclamation_count, average_sentence_length] 
-        scores = [x+0.000001 for x in scores] #gross solution to prevent divide-by-0 errors
-        print repr(scores)
+        # scores = [x+0.000001 for x in scores] #prevents divide-by-0 errors
+        # print (repr(scores), filename)
+        index = filename.rfind("/")
+        print repr((scores, filename[(index+1):]))
 
 
 if __name__ == "__main__":
     for pathname in sys.argv[1:]:
         try:
             # sys.stderr.write("Now trying %s\n" % pathname)
-            process(pathname)
+            process_one_blog(pathname)
         except Exception, e:
             sys.stderr.write(pathname)
             sys.stderr.write(": ")
