@@ -1,15 +1,4 @@
-"""
-Take in a blog
-Split blog into posts (1 post=1 sample)
-
-For each sample
-Create a list of feature scores
-
-Assemble feature vector for each sample
-Output feature vectors
-"""
-
-import sys, re
+import sys, re, csv
 from bs4 import BeautifulSoup
 SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer
 WORD_SPLITTER = re.compile(r"(\w+)").finditer
@@ -70,22 +59,20 @@ def separate_posts(input_blog):
 
 def process_one_blog(filename):
     posts = separate_posts(filename)
+
     for post in posts:
         words, exclamation_count = make_wordcount_dict(post)
-
         I_count = count_i(words)
-
         total_words = 0
-
         average_sentence_length = find_average_sentence_length(post)
 
         for word in words:
             total_words += words[word]
         scores = [total_words, I_count, exclamation_count, average_sentence_length] 
-        # scores = [x+0.000001 for x in scores] #prevents divide-by-0 errors
-        # print (repr(scores), filename)
+        scores = [x+0.001 for x in scores] #prevents divide-by-0 errors
         index = filename.rfind("/")
-        print repr((scores, filename[(index+1):]))
+        shortened_filename = filename[index+1:]
+        print repr((scores, shortened_filename))
 
 
 if __name__ == "__main__":
