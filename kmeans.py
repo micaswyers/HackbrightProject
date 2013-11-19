@@ -21,7 +21,7 @@ def evaluate_input(input):
 
 def write_groupings_to_csv(groupings_list):
     #Writes a CSV file with the cluster & blog [filename] that each post belongs to
-    f = open('groupings.csv', 'wb')
+    f = open('seed_data/groupings.csv', 'wb')
     writer=csv.writer(f, delimiter = "|")
     for item in groupings_list:
         writer.writerow(item)
@@ -31,7 +31,7 @@ def write_centroids_to_csv(centroids_list):
     centroids_list = centroids_list.tolist()
     centroids_list = [map(lambda x: round(x, 3), item) for item in centroids_list ]
     ids_and_vectors = zip(cluster_ids, centroids_list)
-    f = open('centroids.csv', 'wb')
+    f = open('seed_data/centroids.csv', 'wb')
     writer=csv.writer(f, delimiter="|")
     for item in ids_and_vectors:
         writer.writerow(item)

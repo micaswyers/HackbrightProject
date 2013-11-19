@@ -15,21 +15,23 @@ class Blog(Base):
 
     id = Column(Integer, primary_key = True)
     filename = Column(String(64))
-    posts = relationship("Post", backref=backref("blog", order_by=id))
+    posts = relationship("Post", backref=backref("blog", order_by=id)) #um what does this do?
 
 
 class Post(Base):
     __tablename__ = "posts"
 
     id = Column(Integer, primary_key = True)
-    cluster = Column(Integer, ForeignKey('clusters.id'))
+    cluster_id = Column(Integer, ForeignKey('clusters.id'))
     blog_id = Column(Integer, ForeignKey('blogs.id'))
+
 
 class Cluster(Base):
     __tablename__ = "clusters"
 
     id = Column(Integer, primary_key = True)
     centroid_values = Column(ARRAY(Float), nullable=True)
+
 #End class declarations
 def create_db():
     global ENGINE
@@ -58,3 +60,4 @@ def connect():
     Session = sessionmaker(bind=ENGINE)
 
     return Session()
+
