@@ -73,7 +73,8 @@ def process_one_blog(filename):
         scores = [x+0.001 for x in scores] #prevents divide-by-0 errors
         index = filename.rfind("/")
         shortened_filename = filename[index+1:]
-        print repr((scores, shortened_filename))
+
+        print repr((scores, shortened_filename, post))
 
 
 if __name__ == "__main__":

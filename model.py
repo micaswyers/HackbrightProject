@@ -19,11 +19,12 @@ class Blog(Base):
 
 
 class Post(Base):
-    __tablename__ = "posts"
+    __tablename__ = "posts" 
 
     id = Column(Integer, primary_key = True)
     cluster_id = Column(Integer, ForeignKey('clusters.id'))
     blog_id = Column(Integer, ForeignKey('blogs.id'))
+    text = Column(Text)
 
 
 class Cluster(Base):

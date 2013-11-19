@@ -1,53 +1,46 @@
-"""
-takes in an array of feature vectors
-normalizes(whitens) feature vectors to account for disparate lengths
-clusters into k groups 
-returns centroids of k-groups & groupings
-"""
-
 import sys, csv
-from numpy import array
 from scipy.cluster.vq import whiten, vq, kmeans
-
 
 def evaluate_input(input):
     vectors = []
     filenames = []
+    text = []
     for line in input:
         line = eval(line)
         vectors.append(line[0])
         filenames.append(line[1])
-    return vectors, filenames
+        text.append(line[2])
 
-def write_groupings_to_csv(groupings_list):
-    #Writes a CSV file with the cluster & blog [filename] that each post belongs to
-    f = open('seed_data/groupings.csv', 'wb')
+    return vectors, filenames, text
+
+def write_posts_to_csv(posts_list):
+    f = open('seed_data/posts.csv', 'wb')
     writer=csv.writer(f, delimiter = "|")
-    for item in groupings_list:
+    for item in posts_list:
+        item = (item[0], item[1], item[2].encode('utf-8'))
         writer.writerow(item)
 
-def write_centroids_to_csv(centroids_list):
+def write_clusters_to_csv(centroids_list):
     cluster_ids = [number for number in range(len(centroids_list))]
     centroids_list = centroids_list.tolist()
     centroids_list = [map(lambda x: round(x, 3), item) for item in centroids_list ]
     ids_and_vectors = zip(cluster_ids, centroids_list)
-    f = open('seed_data/centroids.csv', 'wb')
+    f = open('seed_data/clusters.csv', 'wb')
     writer=csv.writer(f, delimiter="|")
     for item in ids_and_vectors:
         writer.writerow(item)
 
 
-
 def main(input): 
-    vectors, filenames = evaluate_input(input)
+    vectors, filenames, text = evaluate_input(input)
     whitened = whiten(obs=vectors)
 
     centroids = kmeans(whitened,12)
-    write_centroids_to_csv(centroids[0])
+    write_clusters_to_csv(centroids[0])
 
     clustered_results = vq(whitened, centroids[0])
-    cluster_and_filename = zip(clustered_results[0], filenames)
-    write_groupings_to_csv(cluster_and_filename)
+    clusters_filenames_texts = zip(clustered_results[0], filenames, text)
+    write_posts_to_csv(clusters_filenames_texts)
 
 
 

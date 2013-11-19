@@ -10,17 +10,17 @@ def load_blogs(session):
         session.commit()
 
 def load_posts(session):
-    with open('seed_data/groupings.csv') as csvfile:
+    with open('seed_data/posts.csv') as csvfile:
         cluster_info = csv.reader(csvfile, delimiter='|')
         for row in cluster_info:
             parent_cluster = row[0]
             blog= session.query(model.Blog).filter_by(filename=row[1]).first()
-            post = model.Post(cluster_id=parent_cluster, blog_id=blog.id)
+            post = model.Post(cluster_id=parent_cluster, blog_id=blog.id, text=row[2])
             session.add(post)
         session.commit()
 
 def load_clusters(session):
-    with open('seed_data/centroids.csv') as csvfile:
+    with open('seed_data/clusters.csv') as csvfile:
         ids_and_vectors = csv.reader(csvfile, delimiter = "|")
         for row in ids_and_vectors:
             cluster = model.Cluster(id=row[0], centroid_values=eval(row[1]))
