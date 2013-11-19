@@ -1,6 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, Float
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship, backref, sessionmaker
 
@@ -31,7 +31,7 @@ class Cluster(Base):
     __tablename__ = "clusters"
 
     id = Column(Integer, primary_key = True)
-    centroid_values = Column(ARRAY(Integer), nullable=True)
+    centroid_values = Column(ARRAY(Float), nullable=True)
 #End class declarations
 
 def connect():
@@ -39,6 +39,14 @@ def connect():
     global Session
 
     ENGINE = create_engine("postgres://Mica@/postgres")
+    connection = ENGINE.connect() 
+    connection.execute("commit")
+    connection.execute("DROP DATABASE IF EXISTS recommendations")
+    connection.execute("commit")
+    connection.execute("CREATE DATABASE recommendations")
+    connection.close()
+    ENGINE = create_engine("postgresql://Mica@localhost/recommendations", echo=True)
+    Base.metadata.create_all(ENGINE)
     Session = sessionmaker(bind=ENGINE)
 
     return Session()

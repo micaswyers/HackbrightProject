@@ -34,7 +34,7 @@ def main(session):
     #Call each of the load_* functions with the session as the argument
     #load_blog(s)
     load_clusters(s)
-    load_blog(s)
+    load_blogs(s)
     load_posts(s)
 
 
