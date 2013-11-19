@@ -9,6 +9,7 @@ import sys, csv
 from numpy import array
 from scipy.cluster.vq import whiten, vq, kmeans
 
+
 def evaluate_input(input):
     vectors = []
     filenames = []
@@ -19,21 +20,34 @@ def evaluate_input(input):
     return vectors, filenames
 
 def write_groupings_to_csv(groupings_list):
+    #Writes a CSV file with the cluster & blog [filename] that each post belongs to
     f = open('groupings.csv', 'wb')
     writer=csv.writer(f, delimiter = "|")
     for item in groupings_list:
         writer.writerow(item)
 
+def write_centroids_to_csv(centroids_list):
+    cluster_ids = [number for number in range(len(centroids_list))]
+    centroids_list = centroids_list.tolist()
+    centroids_list = [map(lambda x: round(x, 3), item) for item in centroids_list ]
+    ids_and_vectors = zip(cluster_ids, centroids_list)
+    f = open('centroids.csv', 'wb')
+    writer=csv.writer(f, delimiter="|")
+    for item in ids_and_vectors:
+        writer.writerow(item)
+
+
+
 def main(input): 
     vectors, filenames = evaluate_input(input)
     whitened = whiten(obs=vectors)
 
-    results = kmeans(whitened,12)
-    print "Centroids: ", results[0]
-    clustered_results = vq(whitened, results[0])
+    centroids = kmeans(whitened,12)
+    write_centroids_to_csv(centroids[0])
+
+    clustered_results = vq(whitened, centroids[0])
     cluster_and_filename = zip(clustered_results[0], filenames)
     write_groupings_to_csv(cluster_and_filename)
-    # print "Groupings: ", zip(clustered_results[0], filenames)
 
 
 

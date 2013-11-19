@@ -31,14 +31,14 @@ class Cluster(Base):
     __tablename__ = "clusters"
 
     id = Column(Integer, primary_key = True)
-    vector = Column(ARRAY(Integer))
+    centroid_values = Column(ARRAY(Integer), nullable=True)
 #End class declarations
 
 def connect():
     global ENGINE
     global Session
 
-    ENGINE = create_engine("postgresql://Mica@localhost/recommendations", echo=True)
+    ENGINE = create_engine("postgres://Mica@/postgres")
     Session = sessionmaker(bind=ENGINE)
 
     return Session()

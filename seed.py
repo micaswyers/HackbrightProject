@@ -1,5 +1,6 @@
 import model
 import csv
+import numpy as np
 
 
 def load_blogs(session):
@@ -11,7 +12,6 @@ def load_blogs(session):
         session.commit()
 
 def load_posts(session):
-    #check blogs table for filename, add corresponding blog.id to blog_id
     with open('groupings.csv') as csvfile:
         cluster_info = csv.reader(csvfile, delimiter='|')
         for row in cluster_info:
@@ -22,11 +22,19 @@ def load_posts(session):
         session.commit()
 
 def load_clusters(session):
-    pass
+    with open('centroids.csv') as csvfile:
+        ids_and_vectors = csv.reader(csvfile, delimiter = "|")
+        for row in ids_and_vectors:
+            cluster = model.Cluster(id=row[0], centroid_values=eval(row[1]))
+            session.add(cluster)
+        session.commit()
+
 
 def main(session):
     #Call each of the load_* functions with the session as the argument
     #load_blog(s)
+    load_clusters(s)
+    load_blog(s)
     load_posts(s)
 
 
