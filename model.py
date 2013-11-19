@@ -7,8 +7,6 @@ from sqlalchemy.orm import relationship, backref, sessionmaker
 ENGINE = None
 Session = None
 
-# engine = create_engine("postgresql://Mica@localhost/recommendations")
-
 Base = declarative_base()
 
 #Begin class declarations
@@ -33,8 +31,7 @@ class Cluster(Base):
     id = Column(Integer, primary_key = True)
     centroid_values = Column(ARRAY(Float), nullable=True)
 #End class declarations
-
-def connect():
+def create_db():
     global ENGINE
     global Session
 
@@ -45,8 +42,19 @@ def connect():
     connection.execute("commit")
     connection.execute("CREATE DATABASE recommendations")
     connection.close()
+
+def create_tables():
+    global ENGINE
+    global Session
+
     ENGINE = create_engine("postgresql://Mica@localhost/recommendations", echo=True)
     Base.metadata.create_all(ENGINE)
+
+def connect():
+    global ENGINE
+    global Session
+    
+    ENGINE = create_engine("postgresql://Mica@localhost/recommendations", echo=True)
     Session = sessionmaker(bind=ENGINE)
 
     return Session()

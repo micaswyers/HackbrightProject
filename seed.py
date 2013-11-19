@@ -39,5 +39,7 @@ def main(session):
 
 
 if __name__ == "__main__":
+    model.create_db()
+    model.create_tables()
     s = model.connect()
     main(s)
