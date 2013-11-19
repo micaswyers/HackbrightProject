@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship, backref, sessionmaker
 ENGINE = None
 Session = None
 
-engine = create_engine("postgresql://Mica@localhost/recommendations")
+# engine = create_engine("postgresql://Mica@localhost/recommendations")
 
 Base = declarative_base()
 
@@ -24,8 +24,7 @@ class Post(Base):
     __tablename__ = "posts"
 
     id = Column(Integer, primary_key = True)
-    cluster = Column(Integer)
-    text = Column(Text)
+    cluster = Column(Integer, ForeignKey('clusters.id'))
     blog_id = Column(Integer, ForeignKey('blogs.id'))
 
 class Cluster(Base):
@@ -39,7 +38,7 @@ def connect():
     global ENGINE
     global Session
 
-    ENGINE = create_engine("sqlite:///ratings.db", echo=True)
+    ENGINE = create_engine("postgresql://Mica@localhost/recommendations", echo=True)
     Session = sessionmaker(bind=ENGINE)
 
     return Session()

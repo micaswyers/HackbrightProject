@@ -5,16 +5,9 @@ clusters into k groups
 returns centroids of k-groups & groupings
 """
 
-import sys
+import sys, csv
 from numpy import array
-from scipy.cluster.vq import whiten, vq, kmeans, kmeans2
-
-# def get_vectors(input = sys.stdin):
-#     vectors = []
-#     for line in input:
-#         vectors.append(array(input))
-
-#     return vectors
+from scipy.cluster.vq import whiten, vq, kmeans
 
 def evaluate_input(input):
     vectors = []
@@ -25,18 +18,24 @@ def evaluate_input(input):
         filenames.append(line[1])
     return vectors, filenames
 
+def write_groupings_to_csv(groupings_list):
+    f = open('groupings.csv', 'wb')
+    writer=csv.writer(f, delimiter = "|")
+    for item in groupings_list:
+        writer.writerow(item)
+
 def main(input): 
     vectors, filenames = evaluate_input(input)
     whitened = whiten(obs=vectors)
-    # if using kmeans :
+
     results = kmeans(whitened,12)
     print "Centroids: ", results[0]
     clustered_results = vq(whitened, results[0])
-    print "Groupings: ", zip(clustered_results[0], filenames)
+    cluster_and_filename = zip(clustered_results[0], filenames)
+    write_groupings_to_csv(cluster_and_filename)
+    # print "Groupings: ", zip(clustered_results[0], filenames)
 
-    #  # if using kmeans2 :
-    # results2 = kmeans2(whitened, 3) 
-    # print "KMEANS2: ", results2[1] 
+
 
 if len(sys.argv) > 1:
     for pathname in sys.argv[1:]:

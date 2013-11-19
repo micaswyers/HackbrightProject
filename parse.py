@@ -55,6 +55,7 @@ def separate_posts(input_blog):
     for section in sections:
         post = section.contents[0].strip()
         post_list.append(post)
+
     return post_list
 
 def process_one_blog(filename):
