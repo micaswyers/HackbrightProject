@@ -8,12 +8,28 @@ app = Flask(__name__) #What does this do?
 def index():
     return render_template("main.html")
 
+
+def normalize(text):
+    print "%r"%text
+    mapping = [ (u"\u2018", "'"),
+                (u"\u2019", "'") ]
+    new_text = text
+
+    for src, dst in mapping:
+        print "Replacing %r with %r"%(src, dst)
+        new_text = new_text.replace(src, dst)
+    print "%r"%new_text.encode("utf8")
+   
+    return new_text.encode("utf8")
+
 @app.route("/butts", methods=["GET"]) 
 def butts():
     #calculates feature vector for sample text input by user
     input_text = request.args.get("input_text")
-    print "INPUT TEXT: ", input_text
-    words, exclamation_count = parse.make_wordcount_dict(input_text)
+    clean_text = normalize(input_text)
+
+    # input_text.replace(u"\u2019", "'").decode("utf8")
+    words, exclamation_count = parse.make_wordcount_dict(clean_text)
     I_count = parse.count_i(words)
     total_words = 0
     average_sentence_length = parse.find_average_sentence_length(input_text)
