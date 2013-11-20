@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer
 WORD_SPLITTER = re.compile(r"(\w+)").finditer
 
-def count_i(words):  #use Postgres full-text search 
-    first_person_singular_pronouns = ["I", "I'm", u"I\u2019m", "I've", u"I\u2019ve", "I'll", u"I\u2019ll", "I'd", u"I\u2019d", "Me", "i", "i'm", u"i\u2019m", "i've", u"i\u2019ve", "i'll", u"i\u2019ll", "i'd", u"i\u2019d", "me"] #Me + punctuation? 
+def count_i(words):  #use Postgres full-text search? 
+    first_person_singular_pronouns = ["I", "I'm", u"I\u2019m", "I've", u"I\u2019ve", "I'll", u"I\u2019ll", "I'd", u"I\u2019d", "Me", "i", "i'm", u"i\u2019m", "i've", u"i\u2019ve", "i'll", u"i\u2019ll", "i'd", u"i\u2019d", "me"] 
     total = 0
     for pronoun in first_person_singular_pronouns:
         total += words.get(pronoun, 0)
