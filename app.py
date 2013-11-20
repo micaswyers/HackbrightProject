@@ -1,26 +1,13 @@
 from flask import Flask, render_template
 from flask import request
 import json, parse, model
+from utilies import normalize
 from scipy.spatial.distance import euclidean
 app = Flask(__name__) #What does this do? 
 
 @app.route("/")
 def index():
     return render_template("main.html")
-
-
-def normalize(text):
-    print "%r"%text
-    mapping = [ (u"\u2018", "'"),
-                (u"\u2019", "'") ]
-    new_text = text
-
-    for src, dst in mapping:
-        print "Replacing %r with %r"%(src, dst)
-        new_text = new_text.replace(src, dst)
-    print "%r"%new_text.encode("utf8")
-   
-    return new_text.encode("utf8")
 
 @app.route("/butts", methods=["GET"]) 
 def butts():
