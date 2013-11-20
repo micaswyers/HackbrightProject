@@ -2,12 +2,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Integer, String, Text, Float
 from sqlalchemy.dialects.postgresql import ARRAY
-from sqlalchemy.orm import relationship, backref, sessionmaker
+from sqlalchemy.orm import relationship, backref, sessionmaker, scoped_session
 
-ENGINE = None
-Session = None
+ENGINE = create_engine("postgres://Mica@/postgres", echo=True)
+session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
 
 Base = declarative_base()
+Base.query = session.query_property()
 
 #Begin class declarations
 class Blog(Base):
@@ -35,30 +36,28 @@ class Cluster(Base):
 
 #End class declarations
 def create_db():
-    global ENGINE
-    global Session
-
-    ENGINE = create_engine("postgres://Mica@/postgres")
     connection = ENGINE.connect() 
     connection.execute("commit")
     connection.execute("DROP DATABASE IF EXISTS recommendations")
     connection.execute("commit")
     connection.execute("CREATE DATABASE recommendations")
-    connection.close()
 
 def create_tables():
-    global ENGINE
-    global Session
-
-    ENGINE = create_engine("postgresql://Mica@localhost/recommendations", echo=True)
+    Base.metadata.drop_all(ENGINE)
     Base.metadata.create_all(ENGINE)
 
 def connect():
-    global ENGINE
-    global Session
     
-    ENGINE = create_engine("postgresql://Mica@localhost/recommendations", echo=True)
-    Session = sessionmaker(bind=ENGINE)
+    ENGINE = create_engine("postgres://Mica@/postgres", echo=True)
+    Session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
 
     return Session()
+
+def get_cluster_centroids():
+    clusters = session.query(Cluster).all()
+    return [ cluster.centroid_values for cluster in clusters ]
+
+def get_posts_by_cluster_id(cluster_id):
+    posts = session.query(Post).filter_by(cluster_id = cluster_id).all()
+    return [ post.text for post in posts]
 

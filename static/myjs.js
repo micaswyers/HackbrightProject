@@ -17,6 +17,6 @@
         console.log("The response came back");
         var returned_dictionary = $.parseJSON(response);
         console.log(returned_dictionary);
-        $("#search_results").html("average sentence length: " + returned_dictionary[0].average_sentence_length + "1PS p-nouns: " + returned_dictionary[0].I_count);
+        $("#search_results").html(returned_dictionary[0].waiting);
     });
 });
