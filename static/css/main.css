@@ -48,6 +48,10 @@
     left: 0;
 }
 
+#text {
+    font-family: 'Helvetica', sans-serif;
+    font-size: 12px;
+}
 /* Tags */
 
 body{

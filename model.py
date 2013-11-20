@@ -55,9 +55,13 @@ def connect():
 
 def get_cluster_centroids():
     clusters = session.query(Cluster).all()
-    return [ cluster.centroid_values for cluster in clusters ]
+    return clusters
+    # return [ cluster.centroid_values for cluster in clusters ]
 
 def get_posts_by_cluster_id(cluster_id):
-    posts = session.query(Post).filter_by(cluster_id = cluster_id).all()
-    return [ post.text for post in posts]
+    post_objects = session.query(Post).filter_by(cluster_id = cluster_id).all()
+    posts = []
+    for post_object in post_objects:
+        posts.append(post_object.text)
+    return posts
 

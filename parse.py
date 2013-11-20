@@ -32,7 +32,8 @@ def find_average_sentence_length(sample):
 def make_wordcount_dict(sample):
     words = {}
     tokens = sample.split()
-    tokens = [token.strip("!?.;-") for token in tokens]
+    print "TOKENS:", tokens
+    tokens = [token.strip("?.;-") for token in tokens]
     exclamation_count = 0
     for token in tokens:
         words[token] = words.get(token, 0) + 1
@@ -71,7 +72,7 @@ def process_one_blog(filename):
         for word in words:
             total_words += words[word]
         scores = [total_words, I_count, exclamation_count, average_sentence_length] 
-        scores = [x+0.001 for x in scores] #prevents divide-by-0 errors
+        # scores = [x+0.001 for x in scores] #prevents divide-by-0 errors
         index = filename.rfind("/")
         shortened_filename = filename[index+1:]
 

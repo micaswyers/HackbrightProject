@@ -17,6 +17,7 @@
         console.log("The response came back");
         var returned_dictionary = $.parseJSON(response);
         console.log(returned_dictionary);
-        $("#search_results").html(returned_dictionary[0].waiting);
+        $("#loading").remove();
+        $("#text").html(returned_dictionary[0].post);
     });
 });
