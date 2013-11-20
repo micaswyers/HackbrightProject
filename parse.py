@@ -4,7 +4,7 @@ SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer
 WORD_SPLITTER = re.compile(r"(\w+)").finditer
 
 def count_i(words):  #use Postgres full-text search 
-    first_person_singular_pronouns = ["I", "I'm", "I've", "I'll", "I'd", "Me", "i", "i'm", "i've", "i'll", "i'd", "me"]
+    first_person_singular_pronouns = ["I", "I'm", "I've", "I'll", "I'd", "Me", "i", "i'm", "i've", "i'll", "i'd", "me"] #Me + punctuation? 
     total = 0
     for pronoun in first_person_singular_pronouns:
         total += words.get(pronoun, 0)
@@ -32,6 +32,7 @@ def find_average_sentence_length(sample):
 def make_wordcount_dict(sample):
     words = {}
     tokens = sample.split()
+    tokens = [token.strip("!?.;-") for token in tokens]
     exclamation_count = 0
     for token in tokens:
         words[token] = words.get(token, 0) + 1
