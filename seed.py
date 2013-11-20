@@ -28,11 +28,9 @@ def load_clusters(session):
         session.commit()
 
 def main(session):
-    #Call each of the load_* functions with the session as the argument
     load_clusters(s)
     load_blogs(s)
     load_posts(s)
-
 
 if __name__ == "__main__":
     # model.create_db()
