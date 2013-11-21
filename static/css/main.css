@@ -1,6 +1,6 @@
 /* Classes */
 .container {
-    border: 1px solid #000;
+    /*border: 1px solid #000;*/
     margin: 10px;
 }
 .box {
@@ -13,7 +13,7 @@
     overflow: auto;
 }
 /* IDs */
-#description {
+.big-text {
     text-align: left
 }
 
@@ -48,9 +48,10 @@
     left: 0;
 }
 
-#text {
+.text {
     font-family: 'Helvetica', sans-serif;
     font-size: 12px;
+    text-align: left;
 }
 /* Tags */
 
