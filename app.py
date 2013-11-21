@@ -39,10 +39,12 @@ def butts():
     print "INDEX/ID OF CLOSEST CENTROID: ", cluster_id
 
     #retrieves all posts clustered around this centroid from the database, selects one at random
-    posts = model.get_posts_by_cluster_id(cluster_id)
-    random_post = choice(posts)
+    post_objects = model.get_posts_by_cluster_id(cluster_id)
+    random_post_object = choice(post_objects)
+    random_post_text = random_post_object.text
+    random_post_id = random_post_object.id
 
-    return json.dumps([{'post': random_post}])
+    return json.dumps([{'text': random_post_text, 'id': random_post_id}])
 
 
 if __name__ == '__main__': #And this, what does this do? 

@@ -63,5 +63,6 @@ def get_posts_by_cluster_id(cluster_id):
     posts = []
     for post_object in post_objects:
         posts.append(post_object.text)
-    return posts
+    # return posts
+    return post_objects
 
