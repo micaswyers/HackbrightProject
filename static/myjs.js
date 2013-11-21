@@ -19,6 +19,6 @@
         console.log(returned_dictionary);
         $(".loading").hide();
         $("#search_results").html('<p class="big-text">' + "Based on your input text, you should read: " +  '</p>');
-        $("#search_results").append('<p class="text">' + returned_dictionary[0].post + '</p>');
+        $("#search_results").append('<p class="text">' + returned_dictionary[0].text + '</p>');
     });
 });
