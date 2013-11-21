@@ -4,6 +4,7 @@ SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer
 WORD_SPLITTER = re.compile(r"(\w+)").finditer
 
 def count_i(words):  #use Postgres full-text search? 
+#strip out punctuation on me! 
     first_person_singular_pronouns = ["I", "I'm", "I've", "I'll", "I'd", "Me", "i", "i'm", "i've", "i'll",  "i'd", "me"] 
     total = 0
     for pronoun in first_person_singular_pronouns:
@@ -32,8 +33,6 @@ def find_average_sentence_length(sample):
 def make_wordcount_dict(sample):
     words = {}
     tokens = sample.split()
-    print "TOKENS:", tokens
-    tokens = [token.strip("?.;-") for token in tokens]
     exclamation_count = 0
     for token in tokens:
         words[token] = words.get(token, 0) + 1
@@ -78,6 +77,20 @@ def process_one_blog(filename):
 
         print repr((scores, shortened_filename, post))
 
+def calculate_feature_vector(sample_text):
+    words, exclamation_count = make_wordcount_dict(sample_text)
+    I_count = count_i(words)
+    print "I_COUNT: ", I_count
+
+    total_words = 0
+    average_sentence_length = find_average_sentence_length(sample_text)
+
+    for word in words:
+        total_words += words[word]
+    scores = [total_words, I_count, exclamation_count, average_sentence_length] 
+    scores = [x+0.001 for x in scores] #prevents divide-by-0 errors
+
+    return scores
 
 if __name__ == "__main__":
     for pathname in sys.argv[1:]:
