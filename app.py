@@ -4,6 +4,7 @@ import json, parse, model
 from utilities import normalize
 from random import choice
 from scipy.spatial.distance import euclidean
+from scipy.cluster.vq import whiten
 app = Flask(__name__) #What does this do? 
 
 @app.route("/")
@@ -18,14 +19,22 @@ def butts():
     #calculates a feature vector for sample text 
     feature_vector = parse.calculate_feature_vector(clean_text)
     print "SAMPLE TEXT FEATURE VECTOR ", feature_vector
+    whitened = whiten(feature_vector).tolist()
+    print "WHITENED FEATURE VECTOR ", whitened
+
 
     #retrieves centroid feature vectors from the database
     cluster_objects = model.get_cluster_centroids()
     cluster_centroids = [ cluster.centroid_values for cluster in cluster_objects]
+    print "CENTROIDS: ", cluster_centroids
+
+    #normalizes sample feature vector + centroid feature vectors
+
 
     #calculates geometric distance between sample feature vector and each cluster's centroid
     distance_to_centroids = []
     for centroid in cluster_centroids:
+        # distance = euclidean(centroid, whitened)
         distance = euclidean(centroid, feature_vector)
         distance_to_centroids.append(distance)
     print "DISTANCES: ", distance_to_centroids
@@ -41,10 +50,8 @@ def butts():
     #retrieves all posts clustered around this centroid from the database, selects one at random
     post_objects = model.get_posts_by_cluster_id(cluster_id)
     random_post_object = choice(post_objects)
-    random_post_text = random_post_object.text
-    random_post_id = random_post_object.id
 
-    return json.dumps([{'text': random_post_text, 'id': random_post_id}])
+    return json.dumps([{'text': random_post_object.text, 'id': random_post_object.id, 'cluster': random_post_object.cluster_id, 'feature_vector': feature_vector}])
 
 
 if __name__ == '__main__': #And this, what does this do? 

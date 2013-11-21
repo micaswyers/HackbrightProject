@@ -17,7 +17,7 @@ def write_posts_to_csv(posts_list):
     f = open('seed_data/posts.csv', 'wb')
     writer=csv.writer(f, delimiter = "|")
     for item in posts_list:
-        item = (item[0], item[1], item[2].encode('utf-8'))
+        item = (item[0], item[1], item[2], item[3].encode('utf-8'))
         writer.writerow(item)
 
 def write_clusters_to_csv(centroids_list):
@@ -39,8 +39,8 @@ def main(input):
     write_clusters_to_csv(centroids[0])
 
     clustered_results = vq(whitened, centroids[0])
-    clusters_filenames_texts = zip(clustered_results[0], filenames, text)
-    write_posts_to_csv(clusters_filenames_texts)
+    clusters_filenames_vectors_texts = zip(clustered_results[0], filenames, vectors, text)
+    write_posts_to_csv(clusters_filenames_vectors_texts)
 
 
 

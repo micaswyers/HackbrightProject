@@ -71,7 +71,7 @@ def process_one_blog(filename):
         for word in words:
             total_words += words[word]
         scores = [total_words, I_count, exclamation_count, average_sentence_length] 
-        # scores = [x+0.001 for x in scores] #prevents divide-by-0 errors
+        scores = [x+0.001 for x in scores] #prevents divide-by-0 errors
         index = filename.rfind("/")
         shortened_filename = filename[index+1:]
 

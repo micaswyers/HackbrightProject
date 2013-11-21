@@ -25,6 +25,7 @@ class Post(Base):
     id = Column(Integer, primary_key = True)
     cluster_id = Column(Integer, ForeignKey('clusters.id'))
     blog_id = Column(Integer, ForeignKey('blogs.id'))
+    feature_vector = Column(ARRAY(Float), nullable=False)
     text = Column(Text)
 
 
