@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask import request
 import json, parse, model
-from utilies import normalize
+from utilities import normalize
 from random import choice
 from scipy.spatial.distance import euclidean
 app = Flask(__name__) #What does this do? 
