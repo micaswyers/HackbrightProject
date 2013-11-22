@@ -1,6 +1,5 @@
 import sys, csv
 from scipy.cluster.vq import whiten, vq, kmeans
-from numpy import std
 
 def evaluate_input(input):
     vectors = []
@@ -11,7 +10,7 @@ def evaluate_input(input):
         vectors.append(line[0])
         filenames.append(line[1])
         text.append(line[2])
-
+        
     return vectors, filenames, text
 
 def write_posts_to_csv(posts_list):
@@ -31,7 +30,6 @@ def write_clusters_to_csv(centroids_list):
     for item in ids_and_vectors:
         writer.writerow(item)
 
-
 def main(input): 
     vectors, filenames, text = evaluate_input(input)
     whitened = whiten(obs=vectors)
@@ -42,8 +40,6 @@ def main(input):
     clustered_results = vq(whitened, centroids[0])
     clusters_filenames_vectors_texts = zip(clustered_results[0], filenames, vectors, text)
     write_posts_to_csv(clusters_filenames_vectors_texts)
-
-
 
 if len(sys.argv) > 1:
     for pathname in sys.argv[1:]:
