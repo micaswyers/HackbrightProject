@@ -12,10 +12,29 @@
     margin: 0 auto 200px; 
     overflow: auto;
 }
-/* IDs */
+
+.search_results{
+    text-align: center;
+    padding: 10px;
+    width: 400px;
+    float: right;
+}
+
 .big-text {
     text-align: left
 }
+
+.text {
+    font-family: 'Helvetica', sans-serif;
+    font-size: 12px;
+    text-align: left;
+}
+
+.loading {
+    text-align: center;
+}
+/* IDs */
+
 
 #heading{
     font-family: 'Lobster 1.4', cursive;
@@ -30,12 +49,6 @@
     padding: 10px;
 }
 
-#search_results{
-    text-align: center;
-    padding: 10px;
-    width: 400px;
-    float: right;
-}
 
 #top_border{
     width: 100%;
@@ -48,11 +61,6 @@
     left: 0;
 }
 
-.text {
-    font-family: 'Helvetica', sans-serif;
-    font-size: 12px;
-    text-align: left;
-}
 /* Tags */
 
 body{
