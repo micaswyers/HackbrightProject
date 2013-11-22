@@ -21,6 +21,7 @@ def butts():
     print "SAMPLE TEXT FEATURE VECTOR ", feature_vector
 
     #get features vectors from database, run std, axis=0
+    #replace with memcached
     feature_vectors = model.get_all_feature_vectors()
     std_dev = std(feature_vectors, axis=0)
     print "STANDARD DEVIATION: ", std_dev
@@ -30,6 +31,7 @@ def butts():
     print "WHITENED FEATURE VECTOR: ", whitened_feature_vector
 
     #retrieves centroid feature vectors from the database
+    #memcached
     cluster_objects = model.get_cluster_centroids()
     cluster_centroids = [ cluster.centroid_values for cluster in cluster_objects]
     print "CENTROIDS: ", cluster_centroids
