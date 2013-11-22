@@ -1,5 +1,6 @@
 import sys, csv
 from scipy.cluster.vq import whiten, vq, kmeans
+from numpy import std
 
 def evaluate_input(input):
     vectors = []

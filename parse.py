@@ -71,6 +71,8 @@ def process_one_blog(filename):
         for word in words:
             total_words += words[word]
         scores = [total_words, I_count, exclamation_count, average_sentence_length] 
+        # scores = [I_count, exclamation_count, average_sentence_length] 
+
         scores = [x+0.001 for x in scores] #prevents divide-by-0 errors
         index = filename.rfind("/")
         shortened_filename = filename[index+1:]
@@ -80,14 +82,15 @@ def process_one_blog(filename):
 def calculate_feature_vector(sample_text):
     words, exclamation_count = make_wordcount_dict(sample_text)
     I_count = count_i(words)
-    print "I_COUNT: ", I_count
 
     total_words = 0
     average_sentence_length = find_average_sentence_length(sample_text)
 
     for word in words:
         total_words += words[word]
-    scores = [total_words, I_count, exclamation_count, average_sentence_length] 
+    scores = [total_words, I_count, exclamation_count, average_sentence_length]
+    # scores = [I_count, exclamation_count, average_sentence_length] 
+
     scores = [x+0.001 for x in scores] #prevents divide-by-0 errors
 
     return scores

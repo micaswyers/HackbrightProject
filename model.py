@@ -67,3 +67,10 @@ def get_posts_by_cluster_id(cluster_id):
     # return posts
     return post_objects
 
+def get_all_feature_vectors():
+    post_objects = session.query(Post).all()
+    feature_vectors = []
+    for post_object in post_objects:
+        feature_vectors.append(post_object.feature_vector)
+    return feature_vectors
+

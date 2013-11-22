@@ -16,7 +16,7 @@ def load_posts(session):
             parent_cluster = row[0]
             blog= session.query(model.Blog).filter_by(filename=row[1]).first()
             feature_vector = eval(row[2])
-            post = model.Post(cluster_id=parent_cluster, blog_id=blog.id, feature_vector=feature_vector, text=row[2])
+            post = model.Post(cluster_id=parent_cluster, blog_id=blog.id, feature_vector=feature_vector, text=row[3])
             session.add(post)
         session.commit()
 
