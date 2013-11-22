@@ -14,10 +14,10 @@ def index():
 @app.route("/butts", methods=["GET"]) 
 def butts():
     input_text = request.args.get("input_text")
-    clean_text = normalize(input_text)
+    unicode_clean_text = normalize(input_text)
 
     #calculates a feature vector for sample text 
-    feature_vector = parse.calculate_feature_vector(clean_text)
+    feature_vector = parse.calculate_feature_vector(unicode_clean_text)
     print "SAMPLE TEXT FEATURE VECTOR ", feature_vector
 
     #get features vectors from database, run std, axis=0

@@ -1,13 +1,14 @@
 import sys, re, csv
 from bs4 import BeautifulSoup
-SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer
-WORD_SPLITTER = re.compile(r"(\w+)").finditer
+from string import punctuation
+SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer #splits text into sentences
+WORD_SPLITTER = re.compile(r"(\w+)").finditer #splits sentence into words
 FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "my", "mine"))
 
 def calculate_feature_vector(post):
     exclamation_count = count_exclamation_points(post)
     words = make_wordcount_dict(post)
-    I_count = count_i(words)
+    I_count = count_i2(words)
     average_sentence_length = find_average_sentence_length(post)
 
     total_words = 0
@@ -25,18 +26,12 @@ def count_exclamation_points(sample):
             exclamation_count += 1
     return exclamation_count
 
-def count_i(words):
-    first_person_singular_pronouns = ["I", "I'm", "I've", "I'll", "I'd", "Me", "i", "i'm", "i've", "i'll",  "i'd", "me"] 
-    total = 0
-    for pronoun in first_person_singular_pronouns:
-        total += words.get(pronoun, 0)
-    return total
-
 def count_i2(words):
     total = 0
     for word in words:
-        if word.lower() in FIRST_PERSON_SINGULAR_PRONOUNS:
-            total += 1
+        stripped_word = word.strip(punctuation)
+        if stripped_word.lower() in FIRST_PERSON_SINGULAR_PRONOUNS:
+            total += words[word]
     return total 
 
 def find_average_sentence_length(sample):
@@ -60,11 +55,9 @@ def find_average_sentence_length(sample):
 
 def make_wordcount_dict(sample):
     words = {}
-    beginning = 0
-    for match in WORD_SPLITTER(sample):
-        word = sample[beginning:match.start()]
+    word_list = sample.split()
+    for word in word_list:
         words[word] = words.get(word, 0) + 1
-        beginning = match.end() #look at RE split function 
     return words
 
 def open_file(input_blog):
