@@ -3,12 +3,16 @@ from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Integer, String, Text, Float
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship, backref, sessionmaker, scoped_session
+import memcache
+from numpy import std
 
 ENGINE = create_engine("postgres://Mica@/postgres", echo=True)
 session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
 
 Base = declarative_base()
 Base.query = session.query_property()
+
+mc = memcache.Client(['127.0.0.1:11211'], debug=1)
 
 #Begin class declarations
 class Blog(Base):
@@ -55,8 +59,12 @@ def connect():
     return Session()
 
 def get_cluster_centroids():
-    clusters = session.query(Cluster).all()
-    return clusters
+    centroids = mc.get('centroids')
+    if not centroids:
+        print 'CENTROIDS NOT IN MEMCACHE'
+        centroids = session.query(Cluster).all()
+        mc.set('centroids', centroids)
+    return centroids
     # return [ cluster.centroid_values for cluster in clusters ]
 
 def get_posts_by_cluster_id(cluster_id):
@@ -74,3 +82,10 @@ def get_all_feature_vectors():
         feature_vectors.append(post_object.feature_vector)
     return feature_vectors
 
+def calculate_std_dev(feature_vectors):
+    std_dev = mc.get('std_dev')
+    if not std_dev:
+        print 'STD_DEV NOT IN MEMCACHE'
+        std_dev = std(feature_vectors, axis=0).tolist()
+        mc.set('std_dev', std_dev)
+    return std_dev
