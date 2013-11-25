@@ -1,14 +1,13 @@
-import sys, re, csv
+import sys, re
 from bs4 import BeautifulSoup
-from string import punctuation
 SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer #splits text into sentences
 WORD_SPLITTER = re.compile(r"(\w+)").finditer #splits sentence into words
 FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "my", "mine"))
 
 def calculate_feature_vector(post):
-    exclamation_count = count_exclamation_points(post)
-    words = make_wordcount_dict(post)
-    I_count = count_i2(words)
+    exclamation_count = count_punctuation(post)
+    words = make_wordcount_dict2(post)
+    I_count = count_i(words)
     average_sentence_length = find_average_sentence_length(post)
 
     total_words = 0
@@ -17,20 +16,23 @@ def calculate_feature_vector(post):
     feature_vector = [total_words, I_count, exclamation_count, average_sentence_length] 
     feature_vector = [feature+0.001 for feature in feature_vector] #prevents divide-by-0 errors
     return feature_vector
-    
-def count_exclamation_points(sample):
-    #replace for-loop with RE
-    exclamation_count = 0
-    for character in sample:
-        if character == "!":
-            exclamation_count += 1
-    return exclamation_count
 
-def count_i2(words):
+def comparator(x,y):
+    if x[1] < y[1]:
+        return 1
+    if x[1] > y[1]:
+        return -1
+    else:
+        return cmp(x[0], y[0])
+
+def count_punctuation(sample):
+    ep_matches = re.findall("!", sample)
+    return len(ep_matches)
+
+def count_i(words):
     total = 0
     for word in words:
-        stripped_word = word.strip(punctuation)
-        if stripped_word.lower() in FIRST_PERSON_SINGULAR_PRONOUNS:
+        if word in FIRST_PERSON_SINGULAR_PRONOUNS:
             total += words[word]
     return total 
 
@@ -53,18 +55,22 @@ def find_average_sentence_length(sample):
         average_sentence_length = total_words/len(sentences)
     return average_sentence_length
 
-def make_wordcount_dict(sample):
-    words = {}
-    word_list = sample.split()
-    for word in word_list:
-        words[word] = words.get(word, 0) + 1
-    return words
+def make_wordcount_dict2(post):
+    token_list = normalize(post)
+    wordcount = {}
+    for token in token_list:
+        wordcount[token] = wordcount.get(token, 0) + 1
+    return wordcount
 
 def open_file(input_blog):
     f = open(input_blog, 'rb')
     input_blog = f.read()
     f.close()
     return input_blog
+
+def print_by_frequency(words):
+    for k in sorted(words.iteritems(), cmp=comparator):
+        print k[0], k[1]
 
 def separate_posts(input_blog):
     #separates into posts & returns posts in a list
@@ -76,6 +82,16 @@ def separate_posts(input_blog):
         post = section.contents[0].strip()
         post_list.append(post)
     return post_list
+
+def normalize(text): 
+    text = text.decode("utf8").replace(u"\u2014", " ")
+    word_list = text.lower().split()
+    
+    clean_list = []
+    for word in word_list:
+        word = word.strip("?.,_;\":!'-")
+        clean_list.append(word)
+    return clean_list
 
 def process_one_blog(filename):
     list_of_posts = separate_posts(filename)
