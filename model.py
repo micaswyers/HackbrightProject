@@ -41,6 +41,17 @@ class Cluster(Base):
     centroid_values = Column(ARRAY(Float), nullable=True)
 
 #End class declarations
+
+def calculate_std_dev():
+    std_dev = mc.get('std_dev')
+    if not std_dev:
+        print 'STD_DEV NOT IN MEMCACHE'
+        feature_vectors = get_all_feature_vectors()
+        std_dev = std(feature_vectors, axis=0)
+        mc.set('std_dev', std_dev.tolist())
+    std_dev = numpy.array(std_dev)
+    return std_dev
+    
 def create_db():
     connection = ENGINE.connect() 
     connection.execute("commit")
@@ -83,12 +94,4 @@ def get_all_feature_vectors():
         feature_vectors.append(post_object.feature_vector)
     return feature_vectors
 
-def calculate_std_dev():
-    std_dev = mc.get('std_dev')
-    if not std_dev:
-        print 'STD_DEV NOT IN MEMCACHE'
-        feature_vectors = get_all_feature_vectors()
-        std_dev = std(feature_vectors, axis=0)
-        mc.set('std_dev', std_dev.tolist())
-    std_dev = numpy.array(std_dev)
-    return std_dev
+

@@ -5,8 +5,10 @@ WORD_SPLITTER = re.compile(r"(\w+)").finditer #splits sentence into words
 EP_FINDER = re.compile(r"\!")
 ELLIPSIS_FINDER = re.compile(r"\.{3,}")
 FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "my", "mine"))
+MOST_COMMON_NOUNS = ["time", "person", "year", "way", "day", "thing", "man", "world", "life", "hand", "part", "child", "eye", "woman", "place", "work", "week", "case", "point", "government", "company", "number", "group", "problem", "fact"]
 
 def calculate_feature_vector(post):
+    # print "POST %r"%post
     exclamation_count, ellipsis_count = count_punctuation(post)
     average_sentence_length = find_average_sentence_length(post)
 
@@ -19,11 +21,8 @@ def calculate_feature_vector(post):
     total_words = 0
     for word in words:
         total_words += words[word]
-    feature_vector = [total_words, I_count, exclamation_count, ellipsis_count, average_sentence_length]
-    #divide I_count & exclamation count, ellipsis count by total_words to normalize
-    #deal with case when total_words = 0 (in kmeans)
-    feature_vector = [feature+0.001 for feature in feature_vector] #prevents divide-by-0 erros
- 
+
+    feature_vector = [total_words, int((I_count/float(total_words))*1000), int((exclamation_count/float(total_words))*1000), int((ellipsis_count/float(total_words))*1000), average_sentence_length]
     return feature_vector
 
 def comparator(x,y):
@@ -108,9 +107,10 @@ def separate_posts(input_blog):
     sections = soup.find_all('post')
 
     # append post dictionaries to post_list 
-
     for section in sections:
         post = section.contents[0].strip()
+        if not post: #avoids empty posts
+            continue
         post_list.append(post)
     return post_list
 
