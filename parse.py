@@ -1,4 +1,4 @@
-import sys, re
+import sys, re, utilities
 from bs4 import BeautifulSoup
 SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer #splits text into sentences
 WORD_SPLITTER = re.compile(r"(\w+)").finditer #splits sentence into words
@@ -10,12 +10,16 @@ def calculate_feature_vector(post):
 
     words = make_wordcount_dict(post)
     I_count = count_i(words)
+    #spell checker for number of spelling errors
+    #making sure of first character after !?. is a capital letter 
+    #ellipsis count
 
     total_words = 0
     for word in words:
         total_words += words[word]
-    feature_vector = [total_words, I_count, exclamation_count, average_sentence_length] 
-    feature_vector = [feature+0.001 for feature in feature_vector] #prevents divide-by-0 errors
+    feature_vector = [total_words, I_count/float(total_words), exclamation_count/float(total_words), average_sentence_length]  
+    feature_vector = [feature+0.001 for feature in feature_vector] #prevents divide-by-0 erros
+ 
     return feature_vector
 
 def comparator(x,y):
@@ -35,6 +39,7 @@ def count_i(words_dict):
 
 def count_punctuation(sample):
     ep_matches = re.findall("!", sample)
+    #regex multiple periods in a row 
     return len(ep_matches)
 
 def find_average_sentence_length(sample):
@@ -64,7 +69,7 @@ def make_wordcount_dict(post):
     return wordcount
 
 def normalize(text): 
-    text = text.decode("utf8").replace(u"\u2014", " ")
+    text = utilities.normalize(text)
     word_list = text.lower().split()
     
     clean_list = []
@@ -79,6 +84,10 @@ def open_file(input_blog):
     f.close()
     return input_blog
 
+def print_by_frequency(words):
+    for k in sorted(words.iteritems(), cmp=comparator):
+        print k[0], k[1]
+
 def process_one_blog(filename):
     list_of_posts = separate_posts(filename)
 
@@ -88,15 +97,13 @@ def process_one_blog(filename):
         shortened_filename = filename[index+1:]
         print repr((feature_vector, shortened_filename, post))
 
-def print_by_frequency(words):
-    for k in sorted(words.iteritems(), cmp=comparator):
-        print k[0], k[1]
-
 def separate_posts(input_blog):
     #separates into posts & returns posts in a list
     post_list = []
     soup = BeautifulSoup(open_file(input_blog))
     sections = soup.find_all('post')
+
+    # append post dictionaries to post_list 
 
     for section in sections:
         post = section.contents[0].strip()
