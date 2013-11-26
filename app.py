@@ -19,14 +19,13 @@ def butts():
     #calculates a feature vector for sample text 
     feature_vector = parse.calculate_feature_vector(unicode_clean_text)
 
-    #get features vectors from database, run std, axis=0
-    feature_vectors = model.get_all_feature_vectors()
-    std_dev = std(feature_vectors, axis=0)
+    #retrieves standard deviation of all post feature vectors in database
+    std_dev = model.calculate_std_dev()
 
-    #divide feature vector by resulting std
+    #divide feature vector by standard deviation to whiten 
     whitened_feature_vector = feature_vector/std_dev
 
-    #retrieves centroid feature vectors from the database
+    #retrieves centroid feature vectors from the memcache/database
     cluster_objects = model.get_cluster_centroids()
     cluster_centroids = [ cluster.centroid_values for cluster in cluster_objects]
 

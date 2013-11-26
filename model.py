@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship, backref, sessionmaker, scoped_session
 import memcache
 from numpy import std
+import numpy
 
 ENGINE = create_engine("postgres://Mica@/postgres", echo=True)
 session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
@@ -82,10 +83,12 @@ def get_all_feature_vectors():
         feature_vectors.append(post_object.feature_vector)
     return feature_vectors
 
-def calculate_std_dev(feature_vectors):
+def calculate_std_dev():
     std_dev = mc.get('std_dev')
     if not std_dev:
         print 'STD_DEV NOT IN MEMCACHE'
-        std_dev = std(feature_vectors, axis=0).tolist()
-        mc.set('std_dev', std_dev)
+        feature_vectors = get_all_feature_vectors()
+        std_dev = std(feature_vectors, axis=0)
+        mc.set('std_dev', std_dev.tolist())
+    std_dev = numpy.array(std_dev)
     return std_dev
