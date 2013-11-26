@@ -1,7 +1,8 @@
 def normalize(text):
     mapping = [ (u"\u2018", "'"),
                 (u"\u2019", "'"),
-                (u"\u2014", " ") ]
+                (u"\u2014", " "), 
+                (u"\u2026", "...")]
     new_text = text
 
     for src, dst in mapping:

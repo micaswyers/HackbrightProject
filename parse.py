@@ -2,22 +2,26 @@ import sys, re, utilities
 from bs4 import BeautifulSoup
 SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer #splits text into sentences
 WORD_SPLITTER = re.compile(r"(\w+)").finditer #splits sentence into words
+EP_FINDER = re.compile(r"\!")
+ELLIPSIS_FINDER = re.compile(r"\.{3,}")
 FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "my", "mine"))
 
 def calculate_feature_vector(post):
-    exclamation_count = count_punctuation(post)
+    exclamation_count, ellipsis_count = count_punctuation(post)
     average_sentence_length = find_average_sentence_length(post)
 
     words = make_wordcount_dict(post)
     I_count = count_i(words)
     #spell checker for number of spelling errors
     #making sure of first character after !?. is a capital letter 
-    #ellipsis count
+
 
     total_words = 0
     for word in words:
         total_words += words[word]
-    feature_vector = [total_words, I_count/float(total_words), exclamation_count/float(total_words), average_sentence_length]  
+    feature_vector = [total_words, I_count, exclamation_count, ellipsis_count, average_sentence_length]
+    #divide I_count & exclamation count, ellipsis count by total_words to normalize
+    #deal with case when total_words = 0 (in kmeans)
     feature_vector = [feature+0.001 for feature in feature_vector] #prevents divide-by-0 erros
  
     return feature_vector
@@ -38,9 +42,9 @@ def count_i(words_dict):
     return total 
 
 def count_punctuation(sample):
-    ep_matches = re.findall("!", sample)
-    #regex multiple periods in a row 
-    return len(ep_matches)
+    ep_count = len(EP_FINDER.findall(sample))
+    ellipsis_count = len(ELLIPSIS_FINDER.findall(sample))
+    return ep_count, ellipsis_count
 
 def find_average_sentence_length(sample):
     #regular expressions for lexical analysis

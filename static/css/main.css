@@ -24,6 +24,10 @@
     text-align: left
 }
 
+.medium-text {
+    font-size: 40px;
+}
+
 .text {
     font-family: 'Helvetica', sans-serif;
     font-size: 12px;
