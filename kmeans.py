@@ -1,5 +1,6 @@
 import sys, csv
 from scipy.cluster.vq import whiten, vq, kmeans
+import numpy
 
 def evaluate_input(input):
     vectors = []
@@ -32,9 +33,10 @@ def write_clusters_to_csv(centroids_list):
 
 def main(input): 
     vectors, filenames, text = evaluate_input(input)
+
     whitened = whiten(obs=vectors)
 
-    centroids = kmeans(whitened,15)
+    centroids = kmeans(whitened, 175)
     write_clusters_to_csv(centroids[0])
 
     clustered_results = vq(whitened, centroids[0])

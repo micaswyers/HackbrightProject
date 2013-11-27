@@ -9,10 +9,14 @@ FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "
 
 
 def calculate_feature_vector(post):
+    # spell checker for number of spelling errors
+    # making sure of first character after !?. is a capital letter 
+
     words = make_wordcount_dict(post)
     total_words = 0
     for word in words:
         total_words += words[word]
+
     word_frequency_vector = hashing_trick.generate_feature_vector(words)
 
     I_count = int((count_i(words)/float(total_words))*1000)
@@ -23,12 +27,12 @@ def calculate_feature_vector(post):
 
     average_sentence_length = find_average_sentence_length(post)
 
-    # spell checker for number of spelling errors
-    # making sure of first character after !?. is a capital letter 
+    other_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count]
 
-    other_feature_vector = [total_words, I_count, exclamation_count, ellipsis_count, average_sentence_length]
-
-    return word_frequency_vector
+    feature_vector = word_frequency_vector + other_feature_vector
+    return feature_vector
+    # return other_feature_vector
+    # return word_frequency_vector
 
 def comparator(x,y):
     if x[1] < y[1]:
@@ -77,7 +81,7 @@ def make_wordcount_dict(post):
     return wordcount
 
 def normalize(text): 
-    text = text.encode("utf8")
+    text = utilities.normalize(text).encode("utf8")
     word_list = text.lower().split()
     
     clean_list = []
