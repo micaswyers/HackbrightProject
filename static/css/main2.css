@@ -1,0 +1,82 @@
+/* Classes */
+.container {
+    /*border: 1px solid #000;*/
+    margin: 10px;
+}
+
+.main {
+    width: 960px;
+    margin: 0 auto 200px; 
+    overflow: auto;
+}
+
+.search_results{
+    text-align: center;
+    padding: 10px;
+
+}
+
+.big-text {
+    text-align: center;s
+    color: #00675C; 
+}
+
+.fv {
+    text-align: center;
+    font-size: 14px;
+    color: #00675C; 
+
+}
+
+.medium-text {
+    font-size: 40px;
+    color: #00675C; 
+
+}
+
+.text {
+    font-family: 'Helvetica', serif;
+    font-size: 14px;
+    text-align: left;
+    line-height: 18px;
+    color: #00675C; 
+
+}
+
+
+.loading {
+    text-align: center;
+}
+/* IDs */
+
+
+#heading{
+    font-family: 'Futura', sans-serif;
+    font-size: 75px;
+    color: #00675C; 
+    clear: both;
+}
+
+#sample_input{
+    padding: 10px;
+    font-family: 'Georgia', serif;
+    text-align: center;
+}
+
+#text_area_sample{
+    background-color: #FFFFFF;
+}
+
+/* Tags */
+
+body{
+    color: #00675C; ;
+    font-family: 'Helvetica', serif;
+    font-size: 18px;
+    background-color: #5DCFC3;
+}
+
+
+p {
+    text-align: center;
+}

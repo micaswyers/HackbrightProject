@@ -16,10 +16,10 @@ def calculate_feature_vector(post):
     word_frequency_vector = utilities.generate_hashed_feature_vector(words)
     normalized_word_frequency_vector = normalize_word_frequency_vector(word_frequency_vector, total_words)
 
-    I_count = int((count_i(words)/float(total_words))*1000)
+    I_count = int((count_i(words)/float(total_words))*100)
     exclamation_count, ellipsis_count = count_punctuation(post)
-    exclamation_count = int((exclamation_count/float(total_words))*1000)
-    ellipsis_count = int((ellipsis_count/float(total_words))*1000)
+    exclamation_count = int((exclamation_count/float(total_words))*100)
+    ellipsis_count = int((ellipsis_count/float(total_words))*100)
     average_sentence_length = find_average_sentence_length(post)
 
     style_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count]

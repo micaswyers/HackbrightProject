@@ -8,7 +8,7 @@ app = Flask(__name__) #What does this do?
 
 @app.route("/")
 def index():
-    return render_template("main.html")
+    return render_template("main2.html")
 
 @app.route("/butts", methods=["GET"]) 
 def butts():
