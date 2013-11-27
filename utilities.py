@@ -10,8 +10,8 @@ def generate_hashed_feature_vector(tokens):
     for token in filtered_tokens:
         hashed_token = mmh3.hash(token) % 50
         hashed_dict[hashed_token] = hashed_dict.get(hashed_token) + 1
-
     return hashed_dict.values()
+    
 def normalize(text):
     mapping = [ (u"\u2018", "'"),
                 (u"\u2019", "'"),
