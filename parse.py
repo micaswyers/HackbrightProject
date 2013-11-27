@@ -1,5 +1,6 @@
-import sys, re, utilities
+import sys, re, utilities, hashing_trick
 from bs4 import BeautifulSoup
+
 SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer #splits text into sentences
 WORD_SPLITTER = re.compile(r"(\w+)").finditer #splits sentence into words
 EP_FINDER = re.compile(r"\!")
@@ -8,21 +9,26 @@ FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "
 
 
 def calculate_feature_vector(post):
-    # print "POST %r"%post
-    exclamation_count, ellipsis_count = count_punctuation(post)
-    average_sentence_length = find_average_sentence_length(post)
-
     words = make_wordcount_dict(post)
-    I_count = count_i(words)
-    #spell checker for number of spelling errors
-    #making sure of first character after !?. is a capital letter 
-
     total_words = 0
     for word in words:
         total_words += words[word]
+    word_frequency_vector = hashing_trick.generate_feature_vector(words)
 
-    feature_vector = [total_words, int((I_count/float(total_words))*1000), int((exclamation_count/float(total_words))*1000), int((ellipsis_count/float(total_words))*1000), average_sentence_length]
-    return feature_vector
+    I_count = int((count_i(words)/float(total_words))*1000)
+
+    exclamation_count, ellipsis_count = count_punctuation(post)
+    exclamation_count = int((exclamation_count/float(total_words))*1000)
+    ellipsis_count = int((ellipsis_count/float(total_words))*1000)
+
+    average_sentence_length = find_average_sentence_length(post)
+
+    # spell checker for number of spelling errors
+    # making sure of first character after !?. is a capital letter 
+
+    other_feature_vector = [total_words, I_count, exclamation_count, ellipsis_count, average_sentence_length]
+
+    return word_frequency_vector
 
 def comparator(x,y):
     if x[1] < y[1]:
@@ -71,7 +77,7 @@ def make_wordcount_dict(post):
     return wordcount
 
 def normalize(text): 
-    text = utilities.normalize(text)
+    text = text.encode("utf8")
     word_list = text.lower().split()
     
     clean_list = []
