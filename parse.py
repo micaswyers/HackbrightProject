@@ -5,7 +5,7 @@ WORD_SPLITTER = re.compile(r"(\w+)").finditer #splits sentence into words
 EP_FINDER = re.compile(r"\!")
 ELLIPSIS_FINDER = re.compile(r"\.{3,}")
 FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "my", "mine"))
-MOST_COMMON_NOUNS = ["time", "person", "year", "way", "day", "thing", "man", "world", "life", "hand", "part", "child", "eye", "woman", "place", "work", "week", "case", "point", "government", "company", "number", "group", "problem", "fact"]
+
 
 def calculate_feature_vector(post):
     # print "POST %r"%post
@@ -16,7 +16,6 @@ def calculate_feature_vector(post):
     I_count = count_i(words)
     #spell checker for number of spelling errors
     #making sure of first character after !?. is a capital letter 
-
 
     total_words = 0
     for word in words:
