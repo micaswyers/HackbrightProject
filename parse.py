@@ -16,7 +16,7 @@ def calculate_feature_vector(post):
     total_words = 0
     for word in words:
         total_words += words[word]
-
+    
     word_frequency_vector = hashing_trick.generate_feature_vector(words)
 
     I_count = int((count_i(words)/float(total_words))*1000)

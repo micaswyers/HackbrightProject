@@ -14,12 +14,6 @@ def evaluate_input(input):
         
     return vectors, filenames, text
 
-def write_posts_to_csv(posts_list):
-    f = open('seed_data/posts.csv', 'wb')
-    writer=csv.writer(f, delimiter = "|")
-    for item in posts_list:
-        item = (item[0], item[1], item[2], item[3].encode('utf8'))
-        writer.writerow(item)
 
 def write_clusters_to_csv(centroids_list):
     cluster_ids = [number for number in range(len(centroids_list))]
@@ -31,8 +25,21 @@ def write_clusters_to_csv(centroids_list):
     for item in ids_and_vectors:
         writer.writerow(item)
 
+def write_filenames_to_csv(filenames_list):
+    f = open('seed_data/blog_info.csv', 'wb')
+    writer=csv.writer(f, delimiter = "\n")
+    writer.writerow(filenames_list)
+    
+def write_posts_to_csv(posts_list):
+    f = open('seed_data/posts.csv', 'wb')
+    writer=csv.writer(f, delimiter = "|")
+    for item in posts_list:
+        item = (item[0], item[1], item[2], item[3].encode('utf8'))
+        writer.writerow(item)
+
 def main(input): 
     vectors, filenames, text = evaluate_input(input)
+    write_filenames_to_csv(filenames)
 
     whitened = whiten(obs=vectors)
 
@@ -42,6 +49,7 @@ def main(input):
     clustered_results = vq(whitened, centroids[0])
     clusters_filenames_vectors_texts = zip(clustered_results[0], filenames, vectors, text)
     write_posts_to_csv(clusters_filenames_vectors_texts)
+
 
 if len(sys.argv) > 1:
     for pathname in sys.argv[1:]:
