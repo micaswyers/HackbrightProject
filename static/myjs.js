@@ -19,13 +19,6 @@
         var returned_dictionary = $.parseJSON(response);
         console.log(returned_dictionary);
         $(".loading").hide();
-        // $(".search_results").append($('<p>').addClass("big-text").append("Input text stats:"));
-        // //DECOMPOSE = THE SECRET TO PROGRAMMING 
-        // $(".search_results").append('<p class="text">' + returned_dictionary[0].sample_feature_vector[0] + "Total words" + '</p>');
-        // $(".search_results").append('<p class="text">' + returned_dictionary[0].sample_feature_vector[1] + "1st-person singular pronouns" + '</p>');
-        // $(".search_results").append('<p class="text">' + returned_dictionary[0].sample_feature_vector[2] + "exclamation points" + '</p>');
-        // $(".search_results").append($('<p>').addClass("text").append(returned_dictionary[0].sample_feature_vector[3]).append("Ellipses"));
-        // $(".search_results").append('<p class="text">' + returned_dictionary[0].sample_feature_vector[4] + " average words/sentence" + '</p>');
         $(".search_results").append('<p class="text"' + returned_dictionary[0].     post_feature_vector);
         $(".search_results").append('<p class="big-text">' + "Based on that sample of text, you should read: " +  '</p>');
         $(".search_results").append('<p class="text">' + "Post ID#: " + returned_dictionary[0].id + '</p>');
