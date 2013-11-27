@@ -4,7 +4,6 @@ import json, parse, model
 from utilities import normalize
 from random import choice
 from scipy.spatial.distance import euclidean
-from numpy import std
 app = Flask(__name__) #What does this do? 
 
 @app.route("/")

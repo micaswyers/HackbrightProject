@@ -19,7 +19,8 @@
         var returned_dictionary = $.parseJSON(response);
         console.log(returned_dictionary);
         $(".loading").hide();
-        $(".search_results").append('<p class="text"' + returned_dictionary[0].     post_feature_vector);
+        $(".search_results").append('<p class="big-text">' + "Sample text stats: " +  '</p>');
+        $(".search_results").append('<p class="text">' + returned_dictionary[0].sample_feature_vector + '</p>');
         $(".search_results").append('<p class="big-text">' + "Based on that sample of text, you should read: " +  '</p>');
         $(".search_results").append('<p class="text">' + "Post ID#: " + returned_dictionary[0].id + '</p>');
         $(".search_results").append('<p class="text">' + "Cluster ID#: " + returned_dictionary[0].cluster + '</p>');

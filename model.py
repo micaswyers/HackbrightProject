@@ -13,7 +13,7 @@ session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush
 Base = declarative_base()
 Base.query = session.query_property()
 
-mc = memcache.Client(['127.0.0.1:11211'], debug=1)
+MC = memcache.Client(['127.0.0.1:11211'], debug=1)
 
 #Begin class declarations
 class Blog(Base):
@@ -22,7 +22,6 @@ class Blog(Base):
     id = Column(Integer, primary_key = True)
     filename = Column(String(64))
     posts = relationship("Post", backref=backref("blog", order_by=id)) #um what does this do?
-
 
 class Post(Base):
     __tablename__ = "posts" 
@@ -33,7 +32,6 @@ class Post(Base):
     feature_vector = Column(ARRAY(Float), nullable=False)
     text = Column(Text)
 
-
 class Cluster(Base):
     __tablename__ = "clusters"
 
@@ -43,12 +41,12 @@ class Cluster(Base):
 #End class declarations
 
 def calculate_std_dev():
-    std_dev = mc.get('std_dev')
+    std_dev = MC.get('std_dev')
     if not std_dev:
         print 'STD_DEV NOT IN MEMCACHE'
         feature_vectors = get_all_feature_vectors()
         std_dev = std(feature_vectors, axis=0)
-        mc.set('std_dev', std_dev.tolist())
+        MC.set('std_dev', std_dev.tolist())
     std_dev = numpy.array(std_dev)
     return std_dev
     
@@ -64,27 +62,20 @@ def create_tables():
     Base.metadata.create_all(ENGINE)
 
 def connect():
-    
     ENGINE = create_engine("postgres://Mica@/postgres", echo=True)
     Session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
-
     return Session()
 
 def get_cluster_centroids():
-    centroids = mc.get('centroids')
+    centroids = MC.get('centroids')
     if not centroids:
         print 'CENTROIDS NOT IN MEMCACHE'
         centroids = session.query(Cluster).all()
-        mc.set('centroids', centroids)
+        MC.set('centroids', centroids)
     return centroids
-    # return [ cluster.centroid_values for cluster in clusters ]
 
 def get_posts_by_cluster_id(cluster_id):
     post_objects = session.query(Post).filter_by(cluster_id = cluster_id).all()
-    posts = []
-    for post_object in post_objects:
-        posts.append(post_object.text)
-    # return posts
     return post_objects
 
 def get_all_feature_vectors():
