@@ -1,4 +1,4 @@
-import sys, re, utilities, hashing_trick
+import sys, re, utilities
 from bs4 import BeautifulSoup
 
 SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer #splits text into sentences
@@ -7,32 +7,35 @@ EP_FINDER = re.compile(r"\!")
 ELLIPSIS_FINDER = re.compile(r"\.{3,}")
 FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "my", "mine"))
 
-
 def calculate_feature_vector(post):
-    # spell checker for number of spelling errors
-    # making sure of first character after !?. is a capital letter 
-
     words = make_wordcount_dict(post)
     total_words = 0
     for word in words:
         total_words += words[word]
     
-    word_frequency_vector = hashing_trick.generate_feature_vector(words)
+    word_frequency_vector = utilities.generate_hashed_feature_vector(words)
+    normalized_word_frequency_vector = normalize_word_frequency_vector(word_frequency_vector, total_words)
 
     I_count = int((count_i(words)/float(total_words))*1000)
-
     exclamation_count, ellipsis_count = count_punctuation(post)
     exclamation_count = int((exclamation_count/float(total_words))*1000)
     ellipsis_count = int((ellipsis_count/float(total_words))*1000)
-
     average_sentence_length = find_average_sentence_length(post)
 
-    other_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count]
-
-    feature_vector = word_frequency_vector + other_feature_vector
+    style_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count]
+    feature_vector = style_feature_vector + normalized_word_frequency_vector 
     return feature_vector
-    # return other_feature_vector
-    # return word_frequency_vector
+
+def normalize_word_frequency_vector(frequency_vector, total_words):
+    minimum_value = sorted(frequency_vector)[0]
+    maximum_value = sorted(frequency_vector)[-1]
+    spread = maximum_value - minimum_value
+
+    normalized_word_frequency_vector = []
+    for item in frequency_vector:
+        normalized_item = int(((item-minimum_value)/float(spread+.001))*total_words)
+        normalized_word_frequency_vector.append(normalized_item)
+    return normalized_word_frequency_vector
 
 def comparator(x,y):
     if x[1] < y[1]:
@@ -61,7 +64,6 @@ def find_average_sentence_length(sample):
     sentences = []
     for match in SENTENCE_SPLITTER(sample):
         sentence = sample[beginning:match.start()]
-        # punctuation = sample[match.start():match.end()]
         sentences.append(sentence)
         beginning = match.end()
     total_words = 0
@@ -76,6 +78,7 @@ def find_average_sentence_length(sample):
 def make_wordcount_dict(post):
     token_list = normalize(post)
     wordcount = {}
+
     for token in token_list:
         wordcount[token] = wordcount.get(token, 0) + 1
     return wordcount
@@ -83,7 +86,7 @@ def make_wordcount_dict(post):
 def normalize(text): 
     text = utilities.normalize(text).encode("utf8")
     word_list = text.lower().split()
-    
+
     clean_list = []
     for word in word_list:
         word = word.strip("?.,_;\":!'-")
@@ -102,7 +105,6 @@ def print_by_frequency(words):
 
 def process_one_blog(filename):
     list_of_posts = separate_posts(filename)
-
     for post in list_of_posts:
         feature_vector = calculate_feature_vector(post)
         index = filename.rfind("/")
@@ -110,12 +112,9 @@ def process_one_blog(filename):
         print repr((feature_vector, shortened_filename, post))
 
 def separate_posts(input_blog):
-    #separates into posts & returns posts in a list
     post_list = []
     soup = BeautifulSoup(open_file(input_blog))
     sections = soup.find_all('post')
-
-    # append post dictionaries to post_list 
     for section in sections:
         post = section.contents[0].strip()
         if not post: #avoids empty posts
