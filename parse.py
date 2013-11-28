@@ -106,6 +106,7 @@ def print_by_frequency(words):
 def process_one_blog(filename):
     list_of_posts = separate_posts(filename)
     for post in list_of_posts:
+        post = post.replace("urlLink", "[[LINK]]")
         feature_vector = calculate_feature_vector(post)
         index = filename.rfind("/")
         shortened_filename = filename[index+1:]
