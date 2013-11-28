@@ -16,27 +16,17 @@ def calculate_feature_vector(post):
     word_frequency_vector = utilities.generate_hashed_feature_vector(words)
     normalized_word_frequency_vector = normalize_word_frequency_vector(word_frequency_vector, total_words)
 
-    I_count = int((count_i(words)/float(total_words))*100)
+    I_count = int((count_i(words)/float(total_words))*1000)
     exclamation_count, ellipsis_count = count_punctuation(post)
-    exclamation_count = int((exclamation_count/float(total_words))*100)
-    ellipsis_count = int((ellipsis_count/float(total_words))*100)
+    exclamation_count = int((exclamation_count/float(total_words))*1000)
+    ellipsis_count = int((ellipsis_count/float(total_words))*1000)
     average_sentence_length = find_average_sentence_length(post)
-    u_count = int((words.get("u", 0)/float(total_words))*100)
+    u_count, r_count, count_2 = identify_teenage_writing(words, total_words)
+    link_count = int((words.get("[[link]]", 0)/float(total_words))*1000)
 
-    style_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count, u_count]
-    # feature_vector = style_feature_vector + normalized_word_frequency_vector 
-    return style_feature_vector
-
-def normalize_word_frequency_vector(frequency_vector, total_words):
-    minimum_value = sorted(frequency_vector)[0]
-    maximum_value = sorted(frequency_vector)[-1]
-    spread = maximum_value - minimum_value
-
-    normalized_word_frequency_vector = []
-    for item in frequency_vector:
-        normalized_item = int(((item-minimum_value)/float(spread+.001))*total_words)
-        normalized_word_frequency_vector.append(normalized_item)
-    return normalized_word_frequency_vector
+    style_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count, u_count, r_count, count_2, link_count]
+    feature_vector = style_feature_vector + normalized_word_frequency_vector 
+    return feature_vector
 
 def comparator(x,y):
     if x[1] < y[1]:
@@ -76,6 +66,12 @@ def find_average_sentence_length(sample):
         average_sentence_length = total_words/len(sentences)
     return average_sentence_length
 
+def identify_teenage_writing(words, total_words):
+    u_count = int((words.get("u", 0)/float(total_words))*1000) #"u" for "you"
+    r_count = int((words.get("r", 0)/float(total_words))*1000) #"r" for "are"
+    count_2= int((words.get("2", 0)/float(total_words))*1000) #"2" for "two"
+    return u_count, r_count, count_2
+
 def make_wordcount_dict(post):
     token_list = normalize(post)
     wordcount = {}
@@ -99,6 +95,17 @@ def open_file(input_blog):
     input_blog = f.read()
     f.close()
     return input_blog
+
+def normalize_word_frequency_vector(frequency_vector, total_words):
+    minimum_value = sorted(frequency_vector)[0]
+    maximum_value = sorted(frequency_vector)[-1]
+    spread = maximum_value - minimum_value
+
+    normalized_word_frequency_vector = []
+    for item in frequency_vector:
+        normalized_item = int(((item-minimum_value)/float(spread+.001))*total_words)
+        normalized_word_frequency_vector.append(normalized_item)
+    return normalized_word_frequency_vector
 
 def print_by_frequency(words):
     for k in sorted(words.iteritems(), cmp=comparator):
