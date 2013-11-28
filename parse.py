@@ -21,10 +21,11 @@ def calculate_feature_vector(post):
     exclamation_count = int((exclamation_count/float(total_words))*100)
     ellipsis_count = int((ellipsis_count/float(total_words))*100)
     average_sentence_length = find_average_sentence_length(post)
+    u_count = int((words.get("u", 0)/float(total_words))*100)
 
-    style_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count]
-    feature_vector = style_feature_vector + normalized_word_frequency_vector 
-    return feature_vector
+    style_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count, u_count]
+    # feature_vector = style_feature_vector + normalized_word_frequency_vector 
+    return style_feature_vector
 
 def normalize_word_frequency_vector(frequency_vector, total_words):
     minimum_value = sorted(frequency_vector)[0]
