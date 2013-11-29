@@ -18,8 +18,6 @@ def normalize(text):
                 (u"\u2014", " "), 
                 (u"\u2026", "...")]
     new_text = text
-
     for src, dst in mapping:
         new_text = new_text.replace(src, dst)
-   
     return new_text

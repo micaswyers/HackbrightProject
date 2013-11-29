@@ -1,18 +1,20 @@
 import sys, re, utilities
 from bs4 import BeautifulSoup
+from enchant.checker import SpellChecker
 
 SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer #splits text into sentences
 WORD_SPLITTER = re.compile(r"(\w+)").finditer #splits sentence into words
 EP_FINDER = re.compile(r"\!")
 ELLIPSIS_FINDER = re.compile(r"\.{3,}")
 FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "my", "mine"))
+SPELLCHECKER = SpellChecker("en_US")
 
 def calculate_feature_vector(post):
     words = make_wordcount_dict(post)
     total_words = 0
     for word in words:
         total_words += words[word]
-    
+
     word_frequency_vector = utilities.generate_hashed_feature_vector(words)
     normalized_word_frequency_vector = normalize_word_frequency_vector(word_frequency_vector, total_words)
 
@@ -21,20 +23,12 @@ def calculate_feature_vector(post):
     exclamation_count = int((exclamation_count/float(total_words))*1000)
     ellipsis_count = int((ellipsis_count/float(total_words))*1000)
     average_sentence_length = find_average_sentence_length(post)
-    u_count, r_count, count_2 = identify_teenage_writing(words, total_words)
     link_count = int((words.get("[[link]]", 0)/float(total_words))*1000)
+    misspellings_count = int((count_misspellings(words)/float(total_words))*1000)
 
-    style_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count, u_count, r_count, count_2, link_count]
+    style_feature_vector = [total_words, average_sentence_length, I_count, exclamation_count, ellipsis_count, link_count, misspellings_count]
     feature_vector = style_feature_vector + normalized_word_frequency_vector 
     return feature_vector
-
-def comparator(x,y):
-    if x[1] < y[1]:
-        return 1
-    if x[1] > y[1]:
-        return -1
-    else:
-        return cmp(x[0], y[0])
 
 def count_i(words_dict):
     total = 0
@@ -42,6 +36,13 @@ def count_i(words_dict):
         if word in FIRST_PERSON_SINGULAR_PRONOUNS:
             total += words_dict[word]
     return total 
+
+def count_misspellings(words):
+    misspellings = 0
+    for word in words:
+        if len(word) > 0 and SPELLCHECKER.check(word) == False:
+            misspellings += 1
+    return misspellings
 
 def count_punctuation(sample):
     ep_count = len(EP_FINDER.findall(sample))
@@ -66,14 +67,9 @@ def find_average_sentence_length(sample):
         average_sentence_length = total_words/len(sentences)
     return average_sentence_length
 
-def identify_teenage_writing(words, total_words):
-    u_count = int((words.get("u", 0)/float(total_words))*1000) #"u" for "you"
-    r_count = int((words.get("r", 0)/float(total_words))*1000) #"r" for "are"
-    count_2= int((words.get("2", 0)/float(total_words))*1000) #"2" for "two"
-    return u_count, r_count, count_2
-
 def make_wordcount_dict(post):
     token_list = normalize(post)
+
     wordcount = {}
 
     for token in token_list:
@@ -82,19 +78,14 @@ def make_wordcount_dict(post):
 
 def normalize(text): 
     text = utilities.normalize(text).encode("utf8")
+    text = re.sub(r"\.{2,}", " ", text)
     word_list = text.lower().split()
 
     clean_list = []
     for word in word_list:
-        word = word.strip("?.,_;\":!'-")
+        word = word.strip("?.,_;\":!'-*()")
         clean_list.append(word)
     return clean_list
-
-def open_file(input_blog):
-    f = open(input_blog, 'rb')
-    input_blog = f.read()
-    f.close()
-    return input_blog
 
 def normalize_word_frequency_vector(frequency_vector, total_words):
     minimum_value = sorted(frequency_vector)[0]
@@ -107,9 +98,11 @@ def normalize_word_frequency_vector(frequency_vector, total_words):
         normalized_word_frequency_vector.append(normalized_item)
     return normalized_word_frequency_vector
 
-def print_by_frequency(words):
-    for k in sorted(words.iteritems(), cmp=comparator):
-        print k[0], k[1]
+def open_file(input_blog):
+    f = open(input_blog, 'rb')
+    input_blog = f.read()
+    f.close()
+    return input_blog
 
 def process_one_blog(filename):
     list_of_posts = separate_posts(filename)
@@ -128,7 +121,7 @@ def separate_posts(input_blog):
         post = section.contents[0].strip()
         if not post: #avoids empty posts
             continue
-        post_list.append(post)
+        post_list.append(post) 
     return post_list
 
 if __name__ == "__main__":
