@@ -20,17 +20,19 @@ class Blog(Base):
     __tablename__ = "blogs"
 
     id = Column(Integer, primary_key = True)
-    filename = Column(String(64))
+    url = Column(String(64), unique=True)
     posts = relationship("Post", backref=backref("blog", order_by=id)) #um what does this do?
 
 class Post(Base):
     __tablename__ = "posts" 
 
     id = Column(Integer, primary_key = True)
+    title = Column(Text)
     cluster_id = Column(Integer, ForeignKey('clusters.id'))
     blog_id = Column(Integer, ForeignKey('blogs.id'))
     feature_vector = Column(ARRAY(Float), nullable=False)
-    text = Column(Text)
+    excerpt = Column(Text)
+    url = Column(Text)
 
 class Cluster(Base):
     __tablename__ = "clusters"
