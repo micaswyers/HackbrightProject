@@ -5,18 +5,18 @@
     </head>
 
     <body>
-        <div id="top_border" class="container"></div>
-        <div class="container main">
-            <div id="heading" class="container">
-                <p>Catablog</p>
-                <p class="medium-text">...because you judge blogs, too.</p>
+        <div class="main">
+            <div class="container">
+                <p id="heading">CATABLOG</p>
             </div>
-            <div id="sample_input" class="container box">
-                <p class="big-text">Catablog returns blog posts that are similar to a block of input text.</p>
-                <p><textarea id="text_area_sample" cols="50" rows="15">Copy/paste the text of a blog you like. See what Catablog poops out!</textarea>
+
+            <div id="sample_input" class="container">
+                <p>Catablog returns blog posts that are similar to a block of input text.</p>
+                <p><textarea id="text_area_sample" class="text" cols="75" rows="2">Copy/paste the URL of a blog post that you like. See what Catablog poops out!</textarea>
                 <br><button id="submit" class="btn btn-primary" value="Submit">SUBMIT</button></p>
             </div>
-            <div class="container box">
+
+           <div class="container box">
                 <!-- Make scrollbar -->
                 <div class = "loading">
                     <img src="../static/images/loading.gif" class = "loading" width="200px">
@@ -26,7 +26,9 @@
 
                 </div>
             </div>
+
         </div>
+        
         <!-- Insert the scripts!  -->
         <script src="../static/jquery-2.0.3.js"></script>
         <script src="../static/myjs.js"></script>

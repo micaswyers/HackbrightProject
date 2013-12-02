@@ -3,9 +3,6 @@
     /*border: 1px solid #000;*/
     margin: 10px;
 }
-.box {
-    float: left;
-}
 
 .main {
     width: 960px;
@@ -16,25 +13,35 @@
 .search_results{
     text-align: center;
     padding: 10px;
-    width: 400px;
-    float: right;
+
 }
 
 .big-text {
-    text-align: left
+    text-align: center;s
+    color: #00675C; 
+}
+
+.fv {
+    text-align: center;
+    font-size: 14px;
+    color: #00675C; 
+
 }
 
 .medium-text {
     font-size: 40px;
+    color: #00675C; 
+
 }
 
 .text {
-    font-family: 'Helvetica', sans-serif;
-    font-size: 12px;
+    font-family: 'Helvetica', serif;
+    font-size: 14px;
     text-align: left;
-    line-height: 16px;
-}
+    line-height: 18px;
+    color: #00675C; 
 
+}
 
 
 .loading {
@@ -44,37 +51,30 @@
 
 
 #heading{
-    font-family: 'Lobster 1.4', cursive;
+    font-family: 'Futura', sans-serif;
     font-size: 75px;
-    color: red; 
+    color: #00675C; 
     clear: both;
 }
 
 #sample_input{
-    text-align: center;
-    width: 400px;
     padding: 10px;
+    font-family: 'Georgia', serif;
+    text-align: center;
 }
 
-
-#top_border{
-    width: 100%;
-    height: 24px;
-    margin: 0;
-    padding: 0;
-    background: transparent url(../images/top_border.png) repeat-x 0 0;
-    position: fixed;
-    top: 0;
-    left: 0;
+#text_area_sample{
+    background-color: #FFFFFF;
+    text-align: center;
 }
 
 /* Tags */
 
 body{
-    color: #000;
-    font-family: 'Lobster 1.4', sans-serif;
+    color: #00675C; ;
+    font-family: 'Helvetica', serif;
     font-size: 18px;
-    background-color: #E8E8E8;
+    background-color: #5DCFC3;
 }
 
 

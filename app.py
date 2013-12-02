@@ -1,32 +1,34 @@
 from flask import Flask, render_template
 from flask import request
-import json, parse, model
-from utilities import normalize
+import json
+import model
 from random import choice
 from scipy.spatial.distance import euclidean
-app = Flask(__name__) #What does this do? 
+from calculate_feature_vector import calculate_feature_vector
+from utilities import make_post_dict
+app = Flask(__name__) 
 
 @app.route("/")
 def index():
-    return render_template("main2.html")
+    return render_template("main.html")
 
 @app.route("/butts", methods=["GET"]) 
 def butts():
-    input_text = request.args.get("input_text")
-    unicode_clean_text = normalize(input_text)
+    post_url = request.args.get("input_text")
+    post_dict = make_post_dict(post_url)
 
     #calculates a feature vector for sample text 
-    feature_vector = parse.calculate_feature_vector(unicode_clean_text)
+    feature_vector = calculate_feature_vector(post_dict)[0]
 
-    #retrieves standard deviation of all post feature vectors in database
-    std_dev = model.calculate_std_dev()
+    # retrieves standard deviation of all post feature vectors in database
+    std_dev = model.calculate_std_dev() + 0.001
 
     #divide feature vector by standard deviation to whiten 
     whitened_feature_vector = feature_vector/std_dev
 
     #retrieves centroid feature vectors from the memcache/database
     cluster_objects = model.get_cluster_centroids()
-    cluster_centroids = [ cluster.centroid_values for cluster in cluster_objects]
+    cluster_centroids = [ cluster.centroid_values for cluster in cluster_objects ]
 
     #calculates geometric distance between sample feature vector and each cluster's centroid
     distance_to_centroids = []
@@ -44,7 +46,7 @@ def butts():
     post_objects = model.get_posts_by_cluster_id(cluster_id)
     random_post_object = choice(post_objects)
 
-    return json.dumps([{'text': random_post_object.text, 'id': random_post_object.id, 'cluster': random_post_object.cluster_id, 'sample_feature_vector': feature_vector, 'post_feature_vector': random_post_object.feature_vector}])
+    return json.dumps([{'text': random_post_object.excerpt, 'id': random_post_object.id, 'cluster': random_post_object.cluster_id, 'sample_feature_vector': feature_vector, 'post_feature_vector': random_post_object.feature_vector, 'title': random_post_object.title, 'url': random_post_object.url}])
 
 
 if __name__ == '__main__': #And this, what does this do? 

@@ -19,26 +19,26 @@ MC = memcache.Client(['127.0.0.1:11211'], debug=1)
 class Blog(Base):
     __tablename__ = "blogs"
 
-    id = Column(Integer, primary_key = True)
-    url = Column(String(64), unique=True)
+    id = Column(Integer, primary_key = True, nullable=False)
+    url = Column(String(64), unique=True, nullable=False)
     posts = relationship("Post", backref=backref("blog", order_by=id)) #um what does this do?
 
 class Post(Base):
     __tablename__ = "posts" 
 
-    id = Column(Integer, primary_key = True)
-    title = Column(Text)
-    cluster_id = Column(Integer, ForeignKey('clusters.id'))
-    blog_id = Column(Integer, ForeignKey('blogs.id'))
+    id = Column(Integer, primary_key = True, nullable=False)
+    title = Column(Text, nullable=False)
+    cluster_id = Column(Integer, ForeignKey('clusters.id'), nullable=False)
+    blog_id = Column(Integer, ForeignKey('blogs.id'), nullable=False)
     feature_vector = Column(ARRAY(Float), nullable=False)
-    excerpt = Column(Text)
-    url = Column(Text)
+    excerpt = Column(Text, nullable=False)
+    url = Column(Text, unique=True, nullable=False)
 
 class Cluster(Base):
     __tablename__ = "clusters"
 
-    id = Column(Integer, primary_key = True)
-    centroid_values = Column(ARRAY(Float), nullable=True)
+    id = Column(Integer, primary_key = True, nullable=False)
+    centroid_values = Column(ARRAY(Float), nullable=False)
 
 #End class declarations
 
