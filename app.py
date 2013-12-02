@@ -46,8 +46,9 @@ def butts():
     #retrieves all posts clustered around this centroid from the database, selects one at random
     post_objects = model.get_posts_by_cluster_id(cluster_id)
     random_post_object = choice(post_objects)
+    post_plot_data = model.make_feature_coordinates(random_post_object.feature_vector)
 
-    return json.dumps({'text': random_post_object.excerpt, 'id': random_post_object.id, 'cluster': random_post_object.cluster_id, 'sample_feature_vector': feature_vector, 'post_feature_vector': random_post_object.feature_vector, 'title': random_post_object.title, 'url': random_post_object.url, "sample_plot_data": sample_plot_data})
+    return json.dumps({'text': random_post_object.excerpt, 'id': random_post_object.id, 'cluster': random_post_object.cluster_id, 'sample_feature_vector': feature_vector, 'post_feature_vector': random_post_object.feature_vector, 'title': random_post_object.title, 'url': random_post_object.url, "sample_plot_data": sample_plot_data, 'post_plot_data': post_plot_data})
 
 
 if __name__ == '__main__': #And this, what does this do? 

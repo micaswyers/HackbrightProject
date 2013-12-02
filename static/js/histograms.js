@@ -1,6 +1,6 @@
-function render_graph(plotData){
+function render_graph(plotData, chartId){
     var graph1 = new Rickshaw.Graph( {
-        element: document.querySelector("#chart1"),
+        element: document.querySelector(chartId),
         width: 235,
         height: 85,
         renderer: 'bar',
