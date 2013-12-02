@@ -5,7 +5,7 @@
 }
 
 .main {
-    width: 960px;
+    /*width: 960px;*/
     margin: 0 auto 200px; 
     overflow: auto;
 }
@@ -17,7 +17,7 @@
 }
 
 .big-text {
-    text-align: center;s
+    text-align: center;
     color: #00675C; 
 }
 
@@ -68,6 +68,7 @@
     text-align: center;
 }
 
+
 /* Tags */
 
 body{
@@ -78,6 +79,3 @@ body{
 }
 
 
-p {
-    text-align: center;
-}
