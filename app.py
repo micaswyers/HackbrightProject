@@ -19,6 +19,7 @@ def butts():
 
     #calculates a feature vector for sample text 
     feature_vector = calculate_feature_vector(post_dict)[0]
+    sample_plot_data = model.make_feature_coordinates(feature_vector)
 
     # retrieves standard deviation of all post feature vectors in database
     std_dev = model.calculate_std_dev() + 0.001
@@ -46,7 +47,7 @@ def butts():
     post_objects = model.get_posts_by_cluster_id(cluster_id)
     random_post_object = choice(post_objects)
 
-    return json.dumps([{'text': random_post_object.excerpt, 'id': random_post_object.id, 'cluster': random_post_object.cluster_id, 'sample_feature_vector': feature_vector, 'post_feature_vector': random_post_object.feature_vector, 'title': random_post_object.title, 'url': random_post_object.url}])
+    return json.dumps({'text': random_post_object.excerpt, 'id': random_post_object.id, 'cluster': random_post_object.cluster_id, 'sample_feature_vector': feature_vector, 'post_feature_vector': random_post_object.feature_vector, 'title': random_post_object.title, 'url': random_post_object.url, "sample_plot_data": sample_plot_data})
 
 
 if __name__ == '__main__': #And this, what does this do? 

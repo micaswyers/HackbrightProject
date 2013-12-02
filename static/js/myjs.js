@@ -1,39 +1,33 @@
- $(document).ready(function() {
+$(document).ready(function() {
     console.log('ready!');
     $(".loading").hide();
+    $("#chart1").hide();
     });
 
- $("#submit").click(function (e) {
+$("#submit").click(function (e) {
     console.log("User clicked submit button.");
-    e.preventDefault(); //Overrides submit button defaults or return False prevents event bubbling
+    e.preventDefault();
     $(".loading").show();
     $(".search_results").html(" ");
     var input=$("#text_area_sample").val();
 
     $.ajax({
-        url:"/butts",
-        data: {'input_text': input},
+    url:"/butts",
+    data: {'input_text': input},
     }).done(function(response) {
-        console.log("The response came back");
-        var returned_dictionary = $.parseJSON(response);
-        console.log(returned_dictionary);
-        $(".loading").hide();
-        // $(".search_results").append('<p class="big-text">' + "Sample text stats: " +  '</p>');
-        // $(".search_results").append('<p class="fv">' + "Words/Sentence: " + returned_dictionary[0].sample_feature_vector[0] + '</p>');
-        // $(".search_results").append('<p class="fv">' + "Self-references (per 1000 words):  " + returned_dictionary[0].sample_feature_vector[1] + '</p>');
-        // $(".search_results").append('<p class="fv">' + "Exclamation points (per 1000 words): " + returned_dictionary[0].sample_feature_vector[2] + '</p>');
-        // $(".search_results").append('<p class="fv">' + "Ellipses (per 1000 words): " + returned_dictionary[0].sample_feature_vector[3] + '</p>');
-        // $(".search_results").append('<p class="fv">' + "# of misspellings (per 1000 words): " + returned_dictionary[0].sample_feature_vector[4] + '</p>');
-        $(".search_results").append('<p class="big-text">' + "Based on that sample of text, you should read: " +  '</p>');
-        // $(".search_results").append('<p class="fv">' + "Words/Sentence: " + returned_dictionary[0].post_feature_vector[0] + '</p>');
-        // $(".search_results").append('<p class="fv">' + "Self-references (per 1000 words):  " + returned_dictionary[0].post_feature_vector[1] + '</p>');
-        // $(".search_results").append('<p class="fv">' + "Exclamation points (per 1000 words): " + returned_dictionary[0].post_feature_vector[2] + '</p>');
-        // $(".search_results").append('<p class="fv">' + "Ellipses (per 1000 words): " + returned_dictionary[0].post_feature_vector[3] + '</p>');
-        // $(".search_results").append('<p class="fv">' + "# of misspellings (per 1000 words): " + returned_dictionary[0].post_feature_vector[4] + '</p>');
-        $(".search_results").append('<p class="fv">' + "Post ID#: " + returned_dictionary[0].id + '</p>');
-        $(".search_results").append('<p class="fv">' + "Cluster ID#: " + returned_dictionary[0].cluster + '</p>');
-        $(".search_results").append('<p class="text">' + returned_dictionary[0].title + '</p>');
-        $(".search_results").append('<p class="text">' + returned_dictionary[0].url + '</p>');
-        $(".search_results").append('<p class="text">' + returned_dictionary[0].text + '</p>');
+    console.log("The response came back!");
+    var returned_dictionary = $.parseJSON(response);
+    console.log(returned_dictionary);
+    var sample_plot_data = returned_dictionary["sample_plot_data"];
+    render_graph(sample_plot_data);
+    $(".loading").hide();
+    
+    $("#chart1").show();
+    $(".search_results").append('<p class="big-text">' + "Based on that sample of text, you should read: " +  '</p>');
+    $(".search_results").append('<p class="fv">' + "Post ID#: " + returned_dictionary.id + '</p>');
+    $(".search_results").append('<p class="fv">' + "Cluster ID#: " + returned_dictionary.cluster + '</p>');
+    $(".search_results").append('<p class="text">' + returned_dictionary.title + '</p>');
+    $(".search_results").append('<p class="text">' + returned_dictionary.url + '</p>');
+    $(".search_results").append('<p class="text">' + returned_dictionary.text + '</p>');
     });
 });

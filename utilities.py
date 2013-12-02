@@ -38,6 +38,7 @@ def generate_hashed_feature_vector(tokens):
 
 def make_post_dict(post_url):
     parser_response = PC.get_article_content(post_url)
+    print parser_response
     post_dict = {}
     if parser_response.content.get('content') and parser_response.content.get('word_count') != 0:
         post_dict['title'] = parser_response.content.get('title')

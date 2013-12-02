@@ -87,4 +87,15 @@ def get_all_feature_vectors():
         feature_vectors.append(post_object.feature_vector)
     return feature_vectors
 
+def make_feature_coordinates(feature_vector):
+    data_array = []
+    x = 1
+    for feature in feature_vector[5:]:
+        coordinates = {}
+        coordinates['x'] = x
+        coordinates['y'] = feature
+        data_array.append(coordinates)
+        x += 1
+    return data_array
+
 
