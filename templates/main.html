@@ -15,31 +15,54 @@
         <div class="main-container">
             <div class="left box">
                 <h4>Paste the URL of a blog post that you like: </h4>
-                <textarea id="sample-input-textbox" cols="60" rows="10">Copy/paste the URL of a blog post that you like. See what Catablog poops out!</textarea>
-                <button class="btn btn-info" id="submit" value="Submit">Submit</button></p>
+                <textarea id="sample-input-textbox" cols="60" rows="10">http://micapie.com/2013/11/week-7-we-started-projects/</textarea>
+                <button class="btn btn-info button" id="submit">Submit</button></p>
             </div>
             <div class="right box">
                 <h4>Based on that sample, you should read: </h4>
                 <div id="suggested-reading"></div>
-                <button class="btn btn-info" id="get-stats" value="Submit">View Stats</button></p>
+                <button class="btn btn-info button" id="get-stats">View Stats</button></p>
             </div>
             <br><br>
+
             <div class="stats box">
-                <div id="histogram" class="stats"></div>
+                <div id="stats-table" class="stats">
+                    <h3>Comparison of Stylistic Features</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>TEXT</th>
+                                <th>Words/Sentence</th>
+                                <th>Self-references*</th>
+                                <th>Exclamation Points*</th>
+                                <th>Ellipses*</th>
+                                <th>Misspellings*</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="sample-stats" class="table-striped"></tr>
+                            <tr id="recommended-stats" class="table-striped"></tr>
+                        </tbody>
+                    </table>
+                    <br>*Per 1000 words</br>
+                </div>
+                <div id="histogram-box" class="stats">
+                    <h3>Word Frequency Profiles for Sample & Recommended Texts</h3>
+                    <div id="histogram" class="stats"></div>
+                </div>
             </div>
         </div>
 
 
         <!-- Insert the scripts!  -->
-        <script src="/static/js/jquery-2.0.3.js"></script>
-        <script src="/static/js/myjs.js"></script>
+        <script src="../static/js/jquery-2.0.3.js"></script>
+        <script src="../static/js/myjs.js"></script>
         <!-- Bootstrap thangz! -->
-        <script src="https://code.jquery.com/jquery.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
         <!-- Data visualization -->
         <script src="../static/js/d3.v2.js"></script>
         <script src="../static/js/rickshaw.min.js"></script>
-        <script src="../static/js/histograms.js"></script>
+        <script src="../static/js/stats.js"></script>
 
     </body> 
 </html>
