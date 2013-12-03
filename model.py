@@ -13,7 +13,7 @@ session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush
 Base = declarative_base()
 Base.query = session.query_property()
 
-MC = memcache.Client(['127.0.0.1:11211'], debug=1)
+MC = memcache.Client(['127.0.0.1:11211'], debug=1) #make sure to run 'memcached' from CL 
 
 #Begin class declarations
 class Blog(Base):
@@ -21,7 +21,7 @@ class Blog(Base):
 
     id = Column(Integer, primary_key = True, nullable=False)
     url = Column(String(64), unique=True, nullable=False)
-    posts = relationship("Post", backref=backref("blog", order_by=id)) #um what does this do?
+    posts = relationship("Post", backref=backref("blog", order_by=id))
 
 class Post(Base):
     __tablename__ = "posts" 
@@ -51,6 +51,11 @@ def calculate_std_dev():
         MC.set('std_dev', std_dev.tolist())
     std_dev = numpy.array(std_dev)
     return std_dev
+
+def connect():
+    ENGINE = create_engine("postgres://Mica@/postgres", echo=True)
+    Session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
+    return Session()
     
 def create_db():
     connection = ENGINE.connect() 
@@ -63,10 +68,12 @@ def create_tables():
     Base.metadata.drop_all(ENGINE)
     Base.metadata.create_all(ENGINE)
 
-def connect():
-    ENGINE = create_engine("postgres://Mica@/postgres", echo=True)
-    Session = scoped_session(sessionmaker(bind=ENGINE, autocommit = False, autoflush = False))
-    return Session()
+def get_all_feature_vectors():
+    post_objects = session.query(Post).all()
+    feature_vectors = []
+    for post_object in post_objects:
+        feature_vectors.append(post_object.feature_vector)
+    return feature_vectors
 
 def get_cluster_centroids():
     centroids = MC.get('centroids')
@@ -76,16 +83,15 @@ def get_cluster_centroids():
         MC.set('centroids', centroids)
     return centroids
 
+def get_feature_vector_by_url(url):
+    post_object = session.query(Post).filter_by(url = url).first()
+    if not post_object:
+        return None
+    return post_object.feature_vector
+
 def get_posts_by_cluster_id(cluster_id):
     post_objects = session.query(Post).filter_by(cluster_id = cluster_id).all()
     return post_objects
-
-def get_all_feature_vectors():
-    post_objects = session.query(Post).all()
-    feature_vectors = []
-    for post_object in post_objects:
-        feature_vectors.append(post_object.feature_vector)
-    return feature_vectors
 
 def make_feature_coordinates(feature_vector):
     data_array = []
@@ -97,5 +103,6 @@ def make_feature_coordinates(feature_vector):
         data_array.append(coordinates)
         x += 1
     return data_array
+
 
 

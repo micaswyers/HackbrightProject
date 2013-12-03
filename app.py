@@ -14,12 +14,15 @@ def index():
 @app.route("/butts", methods=["GET"]) 
 def butts():
     post_url = request.args.get("input_text")
-    post_dict = make_post_dict(post_url)
-    if not post_dict:
-        return json.dumps({'error': "<h4><i>Uh-oh, that URL doesn't seem to work. Try again?</i></h4>"})
-
-    #calculates a feature vector for sample text
-    feature_vector = calculate_feature_vector(post_dict)[0]
+    post_url=post_url.strip()
+    #checks if that a post at that url already exists in the database
+    feature_vector = model.get_feature_vector_by_url(post_url)
+    if not feature_vector:
+        post_dict = make_post_dict(post_url)
+        if not post_dict:
+            return json.dumps({'error': "<h4><i>Uh-oh, that URL doesn't seem to work. Try again?</i></h4>"})
+        #calculates a feature vector for sample text
+        feature_vector = calculate_feature_vector(post_dict)[0]
     sample_plot_data = model.make_feature_coordinates(feature_vector)
     sample_table_data = feature_vector[:5]
 
