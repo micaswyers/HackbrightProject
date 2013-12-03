@@ -1,38 +1,38 @@
 $(document).ready(function() {
     console.log('ready!');
-    $(".loading").hide();
-    $("#chart1").hide();
-    $("#chart2").hide();
+    $("#histogram").hide();
+    $("#legend").hide();
     });
 
 $("#submit").click(function (e) {
     console.log("User clicked submit button.");
     e.preventDefault();
-    $(".loading").show();
-    $("#chart1").empty();
-    $("#chart2").empty();
-    $(".search_results").html(" ");
-    var input=$("#text_area_sample").val();
+    $("#suggested-reading").empty();
+    $("#histogram").empty();
+    $("#legend").hide();
+    var input=$("#sample-input-textbox").val();
 
     $.ajax({
-    url:"/butts",
-    data: {'input_text': input},
+        url:"/butts",
+        data: {'input_text': input},
     }).done(function(response) {
-    console.log("The response came back!");
-    var returned_dictionary = $.parseJSON(response);
-    var sample_plot_data = returned_dictionary["sample_plot_data"];
-    var post_plot_data = returned_dictionary["post_plot_data"];
-    render_graph(sample_plot_data, "#chart1");
-    render_graph(post_plot_data, "#chart2");
-    $(".loading").hide();
-    
-    $("#chart1").show().append('<h2>Blog Sample Word Frequency</h2>');
-    $("#chart2").show().append('<h2>Suggested Post Word Frequency</h2>');
-    $(".search_results").append('<p class="big-text">' + "Based on that sample of text, you should read: " +  '</p>');
-    $(".search_results").append('<p class="fv">' + "Post ID#: " + returned_dictionary.id + '</p>');
-    $(".search_results").append('<p class="fv">' + "Cluster ID#: " + returned_dictionary.cluster + '</p>');
-    $(".search_results").append('<p class="text">' + returned_dictionary.title + '</p>');
-    $(".search_results").append('<p class="text">' + returned_dictionary.url + '</p>');
-    $(".search_results").append('<p class="text">' + returned_dictionary.text + '</p>');
+        console.log("The response came back!");
+        var returned_dictionary = $.parseJSON(response);
+        if (returned_dictionary["error"]) {
+            $("#suggested-reading").append(returned_dictionary["error"]);
+        }
+        else {
+            var sample_plot_data = returned_dictionary["sample_plot_data"];
+            var post_plot_data = returned_dictionary["post_plot_data"];
+            $("#legend").empty();
+            render_graph(sample_plot_data, post_plot_data, "#histogram");
+            $("#histogram").append('<h3>' + 'Word Frequency Profiles for Sample & Recommended Texts' + '</h3>');
+            $("#histogram").show();
+            $("#legend").attr("style", " ");
+            $("#suggested-reading").append('<p><b>' + "Title: " + '</b><i>' + returned_dictionary.title + '</i></p>');
+            $("#suggested-reading").append('<p><b>' + "Excerpt: " + '</b>' + '<i>' + returned_dictionary.text + '</i>' + '</p>');
+            $("#suggested-reading").append('<b>' + "Read more at: " + '</b>' + '<a href="' + returned_dictionary.url + '">' +returned_dictionary.url + "</a>" );
+        }
     });
 });
+

@@ -1,6 +1,7 @@
 import re, utilities
 from bs4 import BeautifulSoup
 from enchant.checker import SpellChecker
+from HTMLParser import HTMLParser
 
 SENTENCE_SPLITTER = re.compile(r"([\.\?!]+)").finditer #splits text into sentences
 WORD_SPLITTER = re.compile(r"(\w+)").finditer #splits sentence into words
@@ -11,6 +12,7 @@ SPELLCHECKER = SpellChecker("en_US")
 
 def calculate_feature_vector(post_dictionary):
     post_text = BeautifulSoup(post_dictionary['content']).get_text()
+    post_text = HTMLParser().unescape(post_text) #gets rid of HTML escapes
     url = post_dictionary['url']
     excerpt = post_dictionary['excerpt']
     title = post_dictionary['title']

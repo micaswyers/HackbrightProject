@@ -1,7 +1,7 @@
 .DS_Store
 .env
-.swp
-.db
+*.swp
+*.db
 *.pyc
 
 env/

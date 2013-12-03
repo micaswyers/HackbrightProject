@@ -1,81 +1,54 @@
-/* Classes */
-.container {
-    /*border: 1px solid #000;*/
-    margin: 10px;
+.main-container {
+    width: 960px;
+    height: 900px;
+    margin: auto;
+    /*background: #cdcdcd;*/
 }
 
-.main {
-    /*width: 960px;*/
-    margin: 0 auto 200px; 
+.box {
+    width: 450px;
+    height: 330px;
+    /*background: #9FADC0;*/
+}
+
+.jumbotron{
+    text-align: center;
+}
+
+.left {
+    float: left;
+}
+
+.loading{
+    width: 200px;
+    margin: auto;
+}
+
+.right {
+    float: right;
+}
+
+.stats{
+    clear: both;
+    width: inherit;
+    margin: auto;
+}
+
+#submit{
+    margin-left: 150px;
+}
+
+#suggested-reading{
+    width: 450px;
+    height: 250px;
+    background: #fff;
     overflow: auto;
 }
 
-.search_results{
-    text-align: center;
-    padding: 10px;
-
+#get-stats{
+    margin-left: 150px;
 }
 
-.big-text {
-    text-align: center;
-    color: #00675C; 
-}
-
-.fv {
-    text-align: center;
-    font-size: 14px;
-    color: #00675C; 
-
-}
-
-.medium-text {
-    font-size: 40px;
-    color: #00675C; 
-
-}
-
-.text {
-    font-family: 'Helvetica', serif;
-    font-size: 14px;
-    text-align: left;
-    line-height: 18px;
-    color: #00675C; 
-
-}
-
-
-.loading {
-    text-align: center;
-}
-/* IDs */
-
-
-#heading{
-    font-family: 'Futura', sans-serif;
-    font-size: 75px;
-    color: #00675C; 
+br{
     clear: both;
 }
-
-#sample_input{
-    padding: 10px;
-    font-family: 'Georgia', serif;
-    text-align: center;
-}
-
-#text_area_sample{
-    background-color: #FFFFFF;
-    text-align: center;
-}
-
-
-/* Tags */
-
-body{
-    color: #00675C; ;
-    font-family: 'Helvetica', serif;
-    font-size: 18px;
-    background-color: #5DCFC3;
-}
-
-

@@ -27,15 +27,6 @@ def open_post_dictionaries_from_csv(filename):
             post_dictionary_list.append(row[0])
     return post_dictionary_list
 
-def retrieve_post_tuples_from_csv(some_csv):
-    post_tuple_list = []
-    with open(some_csv, 'rb') as csv_file:
-        reader = csv.reader(csv_file, delimiter="|")
-        for row in reader:
-            row[0] = eval(row[0])
-            post_tuple_list.append(row)
-    return post_tuple_list
-
 def write_clusters_to_csv(centroids_list):
     cluster_ids = [number for number in range(len(centroids_list))]
     centroids_list = centroids_list.tolist()
@@ -56,23 +47,25 @@ def write_posts_to_csv(posts_list):
         writer.writerows(posts_list)
 
 def main():
-    call_readability() #comment if running kmeans from post_dictionaries.csv & don't need to hit Readability API
+    #comment out if running kmeans from post_dictionaries.csv & don't need to hit Readability API
+    # call_readability() 
     post_tuple_list = []
     for post_dictionary in open_post_dictionaries_from_csv('post_dictionaries.csv'):
         post_tuple = calculate_feature_vector(post_dictionary)
         post_tuple_list.append(post_tuple)
     feature_vectors, urls, titles, excerpts, domains = zip(*(post_tuple_list))
-    write_domains_to_csv(domains) #for seeding blogs data table
 
     #performs k-means clustering on feature vectors from all blog posts
     std_dev = numpy.std(feature_vectors, axis=0) + 0.001
     whitened = feature_vectors/std_dev
-    centroids = kmeans(whitened, 50) #can adjust number of clusters for precision
-    write_clusters_to_csv(centroids[0]) #for seeding clusters data table
+    centroids = kmeans(whitened, 100) #can adjust number of clusters for precision
     clustered_results = vq(whitened, centroids[0])
-
     post_data = zip(clustered_results[0], feature_vectors, urls, titles, excerpts, domains)
-    write_posts_to_csv(post_data) #for seeding posts data table
+
+    #writes csv files to be used for seeding datatables
+    write_clusters_to_csv(centroids[0])
+    write_domains_to_csv(domains)
+    write_posts_to_csv(post_data)
 
 if __name__ == "__main__":
     main()

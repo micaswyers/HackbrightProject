@@ -27,18 +27,15 @@ def call_readability():
     return post_list
 
 def generate_hashed_feature_vector(tokens):
-    hashed_dict = {x:0 for x in range(50)} 
-
+    hashed_dict = {x:0 for x in range(100)} 
     filtered_tokens = [token for token in tokens if not token in STOPWORDS ]
-
     for token in filtered_tokens:
-        hashed_token = mmh3.hash(token) % 50
+        hashed_token = mmh3.hash(token) % 100
         hashed_dict[hashed_token] = hashed_dict.get(hashed_token) + 1
     return hashed_dict.values()
 
 def make_post_dict(post_url):
     parser_response = PC.get_article_content(post_url)
-    print parser_response
     post_dict = {}
     if parser_response.content.get('content') and parser_response.content.get('word_count') != 0:
         post_dict['title'] = parser_response.content.get('title')

@@ -1,5 +1,4 @@
-from flask import Flask, render_template
-from flask import request
+from flask import Flask, render_template, request
 import json
 import model
 from random import choice
@@ -8,7 +7,7 @@ from calculate_feature_vector import calculate_feature_vector
 from utilities import make_post_dict
 app = Flask(__name__) 
 
-@app.route("/")
+@app.route("/", )
 def index():
     return render_template("main.html")
 
@@ -16,8 +15,10 @@ def index():
 def butts():
     post_url = request.args.get("input_text")
     post_dict = make_post_dict(post_url)
+    if not post_dict:
+        return json.dumps({'error': "<h4><i>Uh-oh, that URL doesn't seem to work. Try again?</i></h4>"})
 
-    #calculates a feature vector for sample text 
+    #calculates a feature vector for sample text
     feature_vector = calculate_feature_vector(post_dict)[0]
     sample_plot_data = model.make_feature_coordinates(feature_vector)
 
