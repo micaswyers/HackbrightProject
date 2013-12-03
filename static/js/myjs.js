@@ -40,7 +40,7 @@ $("#submit").click(function (e) {
             fillTable(sampleTableData, recommendedTableData);
             $("#suggested-reading").append('<p><b>Title: </b><i>' + returned_dictionary.title + '</i></p>');
             $("#suggested-reading").append('<p><b>Excerpt: </b>' + returned_dictionary.excerpt + '</p>');
-            $("#suggested-reading").append('<b>Read more at: </b>' + '<a href="' + returned_dictionary.url + '">' +returned_dictionary.url + '</a>' );
+            $("#suggested-reading").append('<b>Read more at: </b>' + '<a id="link-color" href="' + returned_dictionary.url + '">' +returned_dictionary.url + '</a>' );
         }
     });
 });

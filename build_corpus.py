@@ -47,8 +47,7 @@ def write_posts_to_csv(posts_list):
         writer.writerows(posts_list)
 
 def main():
-    #comment out if running kmeans from post_dictionaries.csv & don't need to hit Readability API
-    # call_readability() 
+    call_readability()  #comment out if running kmeans from post_dictionaries.csv & don't need to hit Readability API
     post_tuple_list = []
     for post_dictionary in open_post_dictionaries_from_csv('post_dictionaries.csv'):
         post_tuple = calculate_feature_vector(post_dictionary)

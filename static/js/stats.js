@@ -6,10 +6,10 @@ function render_graph(plot1Data, plot2Data, chartId){
         renderer: 'line',
         series: [ {
             data: plot1Data,
-            color: '#6A94D4'
+            color: '#1ABC9C'
         }, {
             data: plot2Data,
-            color: '#052F6D'
+            color: '#F39C12'
         }]
     } );
     graph.render();
