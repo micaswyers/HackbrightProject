@@ -38,9 +38,9 @@ $("#submit").click(function (e) {
             $("table").show();
             render_graph(samplePlotData, postPlotData, "#histogram");
             fillTable(sampleTableData, recommendedTableData);
-            $("#suggested-reading").append('<p><b>Title: </b><i>' + returned_dictionary.title + '</i></p>');
+            $("#suggested-reading").append('<p><b>Post Title: </b><i>' + returned_dictionary.title + '</i></p>');
             $("#suggested-reading").append('<p><b>Excerpt: </b>' + returned_dictionary.excerpt + '</p>');
-            $("#suggested-reading").append('<b>Read more at: </b>' + '<a id="link-color" href="' + returned_dictionary.url + '">' +returned_dictionary.url + '</a>' );
+            $("#suggested-reading").append('<b>Read more at: </b>' + '<a id="link-color" target="tab" href="' + returned_dictionary.url + '">' +returned_dictionary.url + '</a>' );
         }
     });
 });
