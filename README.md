@@ -6,7 +6,7 @@ CATABLOG is a web application that clusters and recommends blog text based on wr
 ##Scraping blogs with Blogscraper
 ######(blogspider.py in blogscraper/)
 
-The blogspider crawls the links for trending tags on [wordpress.com/tags](http://wordpress.com/tags/). It then scrapes the links to recently posted blogs for each tag and saves them as a CSV file.
+The ScraPy-built blogspider crawls the links for trending tags on [wordpress.com/tags](http://wordpress.com/tags/). It then scrapes the links to recently posted blogs for each tag and saves them as a CSV file.
 
 ##Building a corpus and clustering
 ######(build_corpus.py, calculate_feature_vector.py, utilities.py)
