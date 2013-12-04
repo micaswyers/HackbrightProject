@@ -27,6 +27,7 @@ $("#submit").click(function (e) {
         var returned_dictionary = $.parseJSON(response);
         console.log(returned_dictionary);
         if (returned_dictionary["error"]) {
+            $(".loading").hide();
             $("#suggested-reading").append(returned_dictionary["error"]);
         }
         else {
