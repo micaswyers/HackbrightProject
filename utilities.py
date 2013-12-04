@@ -28,6 +28,7 @@ def call_readability():
 
 def generate_hashed_feature_vector(tokens):
     hashed_dict = {x:0 for x in range(100)} 
+    #filters out stopwords due to similar frequency among writers
     filtered_tokens = [token for token in tokens if not token in STOPWORDS ]
     for token in filtered_tokens:
         hashed_token = mmh3.hash(token) % 100
