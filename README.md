@@ -47,4 +47,6 @@ The web framework is built using Flask. The script uses AJAX to send the user-in
 
 After receiving the JSON data from the server, the script displays the relevant title, excerpt, and link for the post. The stylistic features for both the sample post (from the user) and the recommended post (pulled from the database) are displayed side-by-side in both a stats table and a graph (created with Rickshaw).
 
+![alt text](https://raw.github.com/micaswyers/HackbrightProject/master/static/images/catablog_capture.jpg "screenshot from CATABLOG")
+
 *(Mic drop.)*
