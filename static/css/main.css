@@ -9,6 +9,12 @@
     color: #1ABC9C;
 }
 
+.loading{
+    width: 200px;
+    margin-left: 115px;
+    text-align: center;
+}
+
 .box {
     width: 450px;
     height: 330px;
@@ -39,11 +45,6 @@
 
 .left {
     float: left;
-}
-
-.loading{
-    width: 200px;
-    margin: auto;
 }
 
 .right {
