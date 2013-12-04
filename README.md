@@ -1,7 +1,7 @@
 CATABLOG (Because you judge blogs, too.)
 =================
 
-CATABLOG is a web application that clusters and recommends blog text based on writing style. It uses Python, the Readability API, ScraPy, BeautifulSoup, SciPy, NumPy, PyEnchant, SQLAlchemy, Postgresql Flask, JS/Jquery, HTML, and Rickshaw. 
+CATABLOG is a web application that clusters and recommends blog text based on writing style. It uses Python, the Readability API, ScraPy, BeautifulSoup, SciPy, NumPy, PyEnchant, SQLAlchemy, Postgresql, Flask, JS/Jquery, HTML, and Rickshaw. 
 
 ##Scraping blogs with Blogscraper
 ######(blogspider.py in blogscraper/)
