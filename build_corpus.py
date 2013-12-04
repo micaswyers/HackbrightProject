@@ -7,17 +7,6 @@ from calculate_feature_vector import calculate_feature_vector
 
 csv.field_size_limit(sys.maxsize)
 
-def evaluate_input(input):
-    vectors = []
-    filenames = []
-    text = []
-    for line in input:
-        line = eval(line)
-        vectors.append(line[0])
-        filenames.append(line[1])
-        text.append(line[2])
-    return vectors, filenames, text
-
 def open_post_dictionaries_from_csv(filename):
     post_dictionary_list = []
     with open(filename, 'rb') as csv_file:
