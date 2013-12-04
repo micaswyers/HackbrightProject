@@ -11,7 +11,7 @@ FIRST_PERSON_SINGULAR_PRONOUNS = set(("i", "i'm", "i've", "i'll", "i'd", "me", "
 SPELLCHECKER = SpellChecker("en_US")
 
 def calculate_feature_vector(post_dictionary):
-    post_text = BeautifulSoup(post_dictionary['content']).get_text()
+    post_text = BeautifulSoup(post_dictionary['content']).get_text() 
     post_text = HTMLParser().unescape(post_text) #gets rid of HTML escapes
     url = post_dictionary['url']
     excerpt = post_dictionary['excerpt']
@@ -20,9 +20,11 @@ def calculate_feature_vector(post_dictionary):
     total_words = post_dictionary['word_count']
 
     words = make_wordcount_dict(post_text)
-    word_frequency_vector = utilities.generate_hashed_feature_vector(words)
+    word_frequency_vector = utilities.generate_hashed_feature_vector(words) 
     normalized_word_frequency_vector = normalize_word_frequency_vector(word_frequency_vector, total_words)
 
+    #normalizes each feature by dividing by the total words 
+    #multiples by 1000 to avoid floating point errors
     I_count = int((count_i(words)/float(total_words))*1000)
     exclamation_count, ellipsis_count = count_punctuation(post_text)
     exclamation_count = int((exclamation_count/float(total_words))*1000)
@@ -32,7 +34,7 @@ def calculate_feature_vector(post_dictionary):
 
     style_feature_vector = [average_sentence_length, I_count, exclamation_count, ellipsis_count, misspellings_count]
     feature_vector = style_feature_vector + normalized_word_frequency_vector 
-    return (feature_vector, url, title.encode("utf8"), excerpt.encode("utf8"), domain)
+    return (feature_vector, url, title.encode("utf8"), excerpt.encode("utf8"), domain) 
 
 def count_i(words_dict):
     total = 0
@@ -78,7 +80,7 @@ def make_wordcount_dict(post):
 
 def normalize(text): 
     text = utilities.normalize(text).encode("utf8")
-    text = re.sub(r"\.{2,}", " ", text)
+    text = re.sub(r"\.{2,}", " ", text) #replaces ellipses at the end of words
     word_list = text.lower().split()
     clean_list = []
     for word in word_list:
@@ -92,7 +94,7 @@ def normalize_word_frequency_vector(frequency_vector, total_words):
     spread = maximum_value - minimum_value
     normalized_word_frequency_vector = []
     for item in frequency_vector:
-        normalized_item = int(((item-minimum_value)/float(spread+.001))*total_words)
+        normalized_item = int(((item-minimum_value)/float(spread+.001))*total_words) #prevents divide-by-0 errors
         normalized_word_frequency_vector.append(normalized_item)
     return normalized_word_frequency_vector
 

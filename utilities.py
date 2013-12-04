@@ -2,9 +2,7 @@ import mmh3
 import csv
 import os
 from readability import ParserClient
-from HTMLParser import HTMLParser
 PC = ParserClient(os.getenv('READABILITY_API_TOKEN'))
-H = HTMLParser()
 
 STOPWORDS = ['a', 'able', 'about', 'across', 'after', 'all', 'almost', 'also', 'am', 'among', 'an', 'and', 'any', 'are', 'as', 'at', 'be', 'being', 'because', 'been', 'but', 'by', 'can', 'cannot', 'could', 'dear', 'did', 'do', 'does', 'either', 'else', 'ever', 'every', 'for', 'from', 'get', 'got', 'had', 'has', 'have', 'he', 'her', 'hers', 'him', 'his', 'how', 'however', 'i', 'if', 'in', 'into', 'is', 'it', 'its', 'just', 'least', 'let', 'like', 'likely', 'may', 'me', 'might', 'most', 'must', 'my', 'neither', 'no', 'nor', 'not', 'of', 'off', 'often', 'on', 'only', 'or', 'other', 'our', 'own', 'rather', 'said', 'say', 'says', 'she', 'should', 'since', 'so', 'some', 'than', 'that', 'the', 'their', 'them', 'then', 'there', 'these', 'they', 'this', 'to', 'too', 'us', 'wants', 'was', 'we', 'were', 'what', 'when', 'where', 'which', 'while', 'who', 'whom', 'why', 'will', 'with', 'would', 'yet', 'you', 'your']
 
@@ -15,6 +13,7 @@ def add_post_dicts_to_csv(list_of_post_dictionaries):
         writer.writerow(list_of_post_dictionaries)
 
 def call_readability():
+    #makes an API call for each link in the scraped CSV file and returns all data as a list of dictionaries 
     post_list = []
     with open('blogscraper/links_from_wp.csv') as csvfile:
         post_links = csv.reader(csvfile)
@@ -27,8 +26,8 @@ def call_readability():
     return post_list
 
 def generate_hashed_feature_vector(tokens):
+    #hashes each word before performing a wordcount, i.e., does the "hashing trick"
     hashed_dict = {x:0 for x in range(100)} 
-    #filters out stopwords due to similar frequency among writers
     filtered_tokens = [token for token in tokens if not token in STOPWORDS ]
     for token in filtered_tokens:
         hashed_token = mmh3.hash(token) % 100
@@ -38,6 +37,7 @@ def generate_hashed_feature_vector(tokens):
 def make_post_dict(post_url):
     parser_response = PC.get_article_content(post_url)
     post_dict = {}
+    #ensures that the post exists and has text
     if parser_response.content.get('content') and parser_response.content.get('word_count') != 0:
         post_dict['title'] = parser_response.content.get('title')
         post_dict['content'] = parser_response.content.get('content')
